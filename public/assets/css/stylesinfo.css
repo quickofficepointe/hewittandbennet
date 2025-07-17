@@ -1,0 +1,141 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.invoice-wrapper {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 40px;
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.invoice-logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.invoice-logo img {
+    max-width: 150px;
+    height: auto;
+}
+.invoice-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+.sub-title {
+    font-size: 24px;
+    color: #555;
+}
+.bill-details p {
+    margin: 5px 0;
+}
+.invoice-no {
+    font-size: 24px;
+    font-weight: bold;
+}
+.date {
+    font-size: 20px;
+    color: #555;
+}
+.contact-info {
+    font-size: 20px;
+    color: #333;
+    margin: 5px 0;
+}
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+}
+.info-table th,
+.info-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+.info-table th {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(to bottom, #1148C9, #ED1B24);
+}
+.info-table td {
+    font-size: 18px;
+    color: #333;
+}
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.left-section {
+    flex: 1;
+}
+
+.right-section {
+    flex: 1;
+    text-align: right;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+.footer .font-weight-bold {
+    font-weight: bold;
+    color: #333;
+}
+.served-by {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+.terms {
+    margin-top: 20px;
+    color: #777;
+}
+
+.gradient-line {
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(to right, #1148C9, #ED1B24);
+    margin-top: 20px;
+}
+.left-section {
+    flex: 1;
+    border: 1px solid #ccc; /* Add a border */
+    padding: 10px; /* Add some padding for spacing */
+    box-sizing: border-box; /* Include padding and border in element's total width */
+}
+
+.right-section {
+    flex: 1;
+    border: 1px solid #ccc; /* Add a border */
+    padding: 10px; /* Add some padding for spacing */
+    text-align: right;
+    box-sizing: border-box; /* Include padding and border in element's total width */
+}
+/* Add these CSS classes for alignment */
+.left-align {
+    text-align: left;
+}
+
+.center-align {
+    text-align: center;
+}
+
+.right-align {
+    text-align: right;
+}
