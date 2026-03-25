@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\gallery;
+use App\Models\Gallery;
 use App\Models\hewitt_banners;
 use App\Models\courses;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +15,7 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        $galleryItems = gallery::all();
+        $galleryItems = Gallery::all();
         $coursese = courses::all();
         return view('frontendviews.Gallery.gallery',compact('galleryItems','coursese'));
     }
@@ -58,7 +58,7 @@ class GalleryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(gallery $gallery)
+    public function show(Gallery $gallery)
     {
         //
     }
@@ -66,7 +66,7 @@ class GalleryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(gallery $gallery)
+    public function edit(Gallery $gallery)
     {
         //
     }

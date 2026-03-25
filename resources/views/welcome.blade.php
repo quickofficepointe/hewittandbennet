@@ -11,8 +11,8 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1E3A8A',   // blue-900
-                        secondary: '#DC2626', // red-600
+                        primary: '#1E3A8A',
+                        secondary: '#DC2626',
                         light: '#F8FAFC'
                     },
                     animation: {
@@ -28,18 +28,10 @@
             }
         }
     </script>
-    <!-- Alpine.js for interactivity -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="Assets/images/favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="Assets/images/favicon_io/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="Assets/images/favicon_io/favicon-16x16.png">
-    <link rel="manifest" href="Assets/images/favicon_io/site.webmanifest">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         .line-clamp-2 {
@@ -53,10 +45,6 @@
             break-inside: avoid;
         }
 
-        .chatbot-transition {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
         .message {
             padding: 8px 12px;
             border-radius: 10px;
@@ -66,6 +54,7 @@
         }
 
         .message.user {
+            background-color: #EFF6FF;
             color: #1E40AF;
             margin-left: auto;
             text-align: right;
@@ -77,13 +66,58 @@
             margin-right: auto;
             text-align: left;
         }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 42rem;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-enter {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .modal-leave {
+            animation: modalFadeOut 0.2s ease-in;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes modalFadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+
+        .carousel-item {
+            transition: opacity 0.7s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-white text-primary">
     <!-- Header & Navigation -->
-    <header x-data="{ mobileOpen: false }" class="sticky top-0 z-50 bg-white shadow-sm">
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
         <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <!-- Logo and Brand -->
             <div class="flex items-center space-x-3">
                 <img src="{{asset ('assets/img/logo_nobg.png') }}" alt="Hewitt and Bennet Logo" class="h-12 sm:h-14">
                 <span class="text-xl sm:text-2xl font-bold leading-tight">
@@ -91,7 +125,6 @@
                 </span>
             </div>
 
-            <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8">
                 <div class="flex space-x-6">
                     <a href="/" class="text-lg text-primary hover:text-secondary transition-colors">Home</a>
@@ -109,20 +142,12 @@
                 </div>
             </div>
 
-            <!-- Mobile Toggle -->
-            <button @click="mobileOpen = true" class="md:hidden text-primary">
+            <button id="mobile-menu-button" class="md:hidden text-primary">
                 <i class="fa-solid fa-bars text-2xl"></i>
             </button>
         </nav>
 
-        <!-- Mobile Navigation -->
-        <div x-show="mobileOpen" x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 -translate-y-4"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 translate-y-0"
-             x-transition:leave-end="opacity-0 -translate-y-4"
-             class="md:hidden fixed inset-0 bg-white z-40 overflow-y-auto">
+        <div id="mobile-menu" class="hidden fixed inset-0 bg-white z-40 overflow-y-auto">
             <div class="px-6 py-4">
                 <div class="flex justify-between items-center mb-6">
                     <div class="flex items-center space-x-3">
@@ -131,21 +156,21 @@
                             Hewitt And Bennet<br>International College
                         </span>
                     </div>
-                    <button @click="mobileOpen = false" class="text-primary">
+                    <button id="close-mobile-menu" class="text-primary">
                         <i class="fa-solid fa-xmark text-2xl"></i>
                     </button>
                 </div>
                 <div class="flex flex-col space-y-5 text-center py-6">
-                    <a href="/" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Home</a>
-                    <a href="#about" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">About Us</a>
-                    <a href="{{ route('courses.all') }}" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Courses</a>
-                    <a href="#admissions" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Admissions</a>
-                    <a href="#campus" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Campus</a>
-                    <a href="#contact" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Contact Us</a>
+                    <a href="/" class="text-lg text-primary hover:text-secondary py-2">Home</a>
+                    <a href="#about" class="text-lg text-primary hover:text-secondary py-2">About Us</a>
+                    <a href="{{ route('courses.all') }}" class="text-lg text-primary hover:text-secondary py-2">Courses</a>
+                    <a href="#admissions" class="text-lg text-primary hover:text-secondary py-2">Admissions</a>
+                    <a href="#campus" class="text-lg text-primary hover:text-secondary py-2">Campus</a>
+                    <a href="#contact" class="text-lg text-primary hover:text-secondary py-2">Contact Us</a>
 
                     <div class="pt-4 border-t border-gray-200 space-y-4">
-                        <a href="#enroll" @click="mobileOpen = false" class="block bg-secondary text-white py-3 rounded-lg hover:bg-red-700 text-lg">Enroll Now</a>
-                        <a href="{{ route('courses.all') }}" @click="mobileOpen = false" class="block border border-primary text-primary py-3 rounded-lg hover:bg-blue-50 text-lg">View Courses</a>
+                        <a href="#enroll" class="block bg-secondary text-white py-3 rounded-lg hover:bg-red-700 text-lg">Enroll Now</a>
+                        <a href="{{ route('courses.all') }}" class="block border border-primary text-primary py-3 rounded-lg hover:bg-blue-50 text-lg">View Courses</a>
                     </div>
                 </div>
             </div>
@@ -153,18 +178,14 @@
     </header>
 
     <!-- Hero Carousel -->
-    <section x-data="carousel()" id="hero-carousel" class="relative h-screen flex items-center justify-center text-white overflow-hidden">
+    <section id="hero-carousel" class="relative h-screen flex items-center justify-center text-white overflow-hidden">
         <div class="absolute inset-0 w-full h-full">
-            @foreach($banners as $index => $banner)
-            <div x-show="currentIndex === {{ $index }}" x-transition:enter="transition ease-out duration-700"
-                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-700"
-                 x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                 class="absolute inset-0 w-full h-full">
-                <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->title ?? 'Banner Image' }}" class="object-cover w-full h-full">
-                <div class="absolute inset-0 bg-black opacity-30 z-10"></div>
-            </div>
-            @endforeach
+        @foreach($banners as $index => $banner)
+<div class="carousel-item absolute inset-0 w-full h-full {{ $index === 0 ? 'opacity-100 active' : 'opacity-0' }}" data-index="{{ $index }}">
+    <img src="{{ $banner->image_path }}" alt="College Banner" class="object-cover w-full h-full">
+    <div class="absolute inset-0 bg-black opacity-30 z-10"></div>
+</div>
+@endforeach
         </div>
 
         <div class="relative z-20 text-center px-4 max-w-4xl mx-auto">
@@ -172,27 +193,31 @@
                 <span>Training for</span> <span>Global</span> Assignments
             </h1>
             <p class="text-xl md:text-2xl mb-8 text-white text-opacity-90 drop-shadow-md">
-                Empowering students to excel globally through industry-focused training and internationally recognized programs.
+                Empowering students to excel globally through industry-focused training and Internationally recognized programs.
             </p>
             <div class="flex flex-col items-center space-y-4">
                 <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#enroll" class="bg-secondary text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-700 transition-colors shadow-lg">Enroll Now</a>
-                    <a href="{{ route('courses.all') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-white hover:text-primary transition-colors shadow-lg">View Courses</a>
+                    <a href="#enroll" class="bg-red-600 text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-700 transition-colors shadow-lg">Enroll Now</a>
+                    <a href="{{ route('courses.all') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-white hover:text-blue-900 transition-colors shadow-lg">View Courses</a>
                 </div>
-                <a href="#abroad-opportunities" class="bg-secondary text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-700 transition-colors shadow-lg">Abroad Opportunities</a>
+                <a href="#abroad-opportunities" class="bg-red-600 text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-700 transition-colors shadow-lg">Abroad Opportunities</a>
             </div>
         </div>
 
-        <button @click="prev()" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full z-30">
-            <i class="fa-solid fa-chevron-left"></i>
+        <button class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full z-30" id="carousel-prev">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
         </button>
-        <button @click="next()" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full z-30">
-            <i class="fa-solid fa-chevron-right"></i>
+        <button class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full z-30" id="carousel-next">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
         </button>
 
-        <div class="absolute bottom-8 z-30 flex space-x-2">
+        <div class="absolute bottom-8 z-30 flex space-x-2" id="carousel-dots">
             @foreach($banners as $index => $banner)
-            <span @click="goTo({{ $index }})" :class="{'bg-white bg-opacity-80': currentIndex === {{ $index }}, 'bg-white bg-opacity-50': currentIndex !== {{ $index }}}" class="dot w-3 h-3 rounded-full cursor-pointer hover:bg-opacity-80 transition-colors duration-300"></span>
+            <span class="dot w-3 h-3 bg-white bg-opacity-50 rounded-full cursor-pointer hover:bg-opacity-80 transition-colors duration-300 {{ $index === 0 ? 'active-dot' : '' }}"></span>
             @endforeach
         </div>
     </section>
@@ -203,7 +228,6 @@
             <h2 class="text-4xl md:text-5xl font-bold text-primary text-center mb-12">About Our College</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-10 max-w-6xl mx-auto items-stretch">
-                <!-- Left: About Text -->
                 <div class="bg-white p-8 rounded-lg shadow-xl transform hover:scale-105 transition-transform duration-300 min-h-full flex flex-col justify-center">
                     <p class="text-gray-700 text-lg leading-relaxed mb-6">
                         At Hewitt and Bennet International College, we're dedicated to delivering industry-focused training that empowers students for global careers. Our accreditations and partnerships highlight our commitment to high-quality, internationally recognized education.
@@ -213,11 +237,9 @@
                     </p>
                 </div>
 
-                <!-- Right: Vision, Mission, Values -->
                 <div class="relative flex flex-col gap-8">
                     <div class="absolute inset-y-0 left-1/2 transform -translate-x-1/2 w-px bg-gray-300 z-0 hidden sm:block"></div>
 
-                    <!-- Vision -->
                     <div class="bg-white p-8 rounded-lg shadow-xl border-t-4 border-blue-600 transform hover:-translate-y-2 transition-transform duration-300 relative z-10 pl-8 pr-4">
                         <h3 class="text-3xl font-bold text-blue-800 mb-4">Our Vision</h3>
                         <p class="text-gray-700 leading-relaxed">
@@ -225,9 +247,7 @@
                         </p>
                     </div>
 
-                    <!-- Mission & Values -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 relative z-10">
-                        <!-- Mission -->
                         <div class="bg-white p-8 rounded-lg shadow-xl border-t-4 border-secondary transform hover:-translate-y-2 transition-transform duration-300 pl-8 pr-4">
                             <h3 class="text-3xl font-bold text-secondary mb-4">Our Mission</h3>
                             <p class="text-gray-700 leading-relaxed">
@@ -235,7 +255,6 @@
                             </p>
                         </div>
 
-                        <!-- Values -->
                         <div class="bg-white p-8 rounded-lg shadow-xl border-t-4 border-blue-600 transform hover:-translate-y-2 transition-transform duration-300 pl-8 pr-4">
                             <h3 class="text-3xl font-bold text-blue-800 mb-4">Our Values</h3>
                             <ul class="list-disc list-inside text-gray-700 leading-relaxed space-y-2">
@@ -249,7 +268,6 @@
                 </div>
             </div>
 
-            <!-- CTA -->
             <div class="text-center mt-16">
                 <p class="text-2xl font-semibold text-gray-800 mb-6">Ready to start your global journey?</p>
                 <a href="{{ route('courses.all') }}" class="bg-blue-700 text-white px-10 py-4 rounded-full text-xl font-bold hover:bg-blue-800 transition-colors shadow-lg">
@@ -292,7 +310,6 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($coursese as $course)
                 <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col h-full">
-                    <!-- Course Image -->
                     <div class="relative h-48 overflow-hidden">
                         <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}"
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
@@ -300,183 +317,63 @@
                         <span class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Featured</span>
                     </div>
 
-                    <!-- Course Content -->
                     <div class="p-6 flex-grow">
-                        <!-- Course Name & Department -->
                         <div class="mb-3">
                             <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">
                                 {{ $course->department->name ?? 'Professional' }}
                             </span>
                         </div>
-
-                        <!-- Course Title -->
                         <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight">
                             {{ $course->name }}
                         </h3>
-
-                        <!-- Short Description -->
                         <p class="text-gray-600 text-sm mb-4 line-clamp-2">
                             {{ $course->short_description ?? Str::limit($course->course_description, 120) }}
                         </p>
-
-                        <!-- Key Features -->
                         <div class="mt-4 pt-4 border-t border-gray-100">
                             <div class="flex flex-wrap gap-3 text-xs">
-                                <div class="flex items-center text-blue-600">
-                                    <i class="fa-solid fa-check-circle mr-1"></i>
-                                    Accredited
-                                </div>
-                                <div class="flex items-center text-green-600">
-                                    <i class="fa-solid fa-globe mr-1"></i>
-                                    Global
-                                </div>
+                                <div class="flex items-center text-blue-600"><i class="fa-solid fa-check-circle mr-1"></i>Accredited</div>
+                                <div class="flex items-center text-green-600"><i class="fa-solid fa-globe mr-1"></i>Global</div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Action Buttons -->
                     <div class="px-6 pb-6 mt-auto">
                         <div class="flex gap-3">
-                            <a href="{{ route('course.single', $course->slug) }}"
-                               class="flex-1 text-center bg-white border border-blue-600 text-blue-600 py-2 px-4 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-                                Learn More
-                            </a>
-                            <a href="#enroll-modal"
-                               class="flex-1 text-center bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors apply-btn"
-                               data-course="{{ $course->id }}">
-                                Apply
-                            </a>
+                            <a href="{{ route('course.single', $course->slug) }}" class="flex-1 text-center bg-white border border-blue-600 text-blue-600 py-2 px-4 rounded-lg font-medium hover:bg-blue-50 transition-colors">Learn More</a>
+                            <a href="#" class="flex-1 text-center bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors apply-btn" data-course="{{ $course->id }}">Apply</a>
                         </div>
                     </div>
                 </div>
                 @endforeach
             </div>
-
-            <!-- View All Button -->
             <div class="text-center mt-12">
                 <a href="{{ route('courses.all') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                    View All Courses
-                    <i class="fa-solid fa-arrow-right ml-2"></i>
+                    View All Courses <i class="fa-solid fa-arrow-right ml-2"></i>
                 </a>
             </div>
         </div>
     </section>
 
     <!-- Apply Now Modal -->
-    <div x-data="{ open: false, selectedCourse: '' }"
-         x-show="open"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-         style="display: none;">
-
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-auto overflow-y-auto max-h-[90vh] relative">
-            <!-- Close Button -->
-            <button @click="open = false" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
-
+    <div id="apply-modal" class="modal">
+        <div class="modal-content">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
             <form id="enrollment-form" class="p-8 space-y-6" action="{{ route('courseregistration.store') }}" method="POST">
                 @csrf
                 <h2 class="text-2xl font-bold text-primary mb-6">Course Application Form</h2>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Personal Information -->
-                    <div class="md:col-span-2">
-                        <h3 class="text-lg font-semibold text-blue-800 mb-4 border-b pb-2">Personal Information</h3>
-                    </div>
-
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <input type="text" name="name" id="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                        <input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-
-                    <div>
-                        <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" name="location" id="location" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-
-                    <div>
-                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input type="tel" name="phoneNumber" id="phoneNumber" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-
-                    <!-- Course Information -->
-                    <div class="md:col-span-2">
-                        <h3 class="text-lg font-semibold text-blue-800 mb-4 border-b pb-2">Course Information</h3>
-                    </div>
-
-                    <div>
-                        <label for="course_id" class="block text-sm font-medium text-gray-700">Select Course</label>
-                        <select name="course_id" id="course_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Course --</option>
-                            @foreach($coursese as $course)
-                            <option value="{{ $course->id }}">{{ $course->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="campus_id" class="block text-sm font-medium text-gray-700">Select Campus</label>
-                        <select name="campus_id" id="campus_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Campus --</option>
-                            @foreach($campuses as $campus)
-                            <option value="{{ $campus->id }}">{{ $campus->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="startMonth" class="block text-sm font-medium text-gray-700">Start Month</label>
-                        <select name="startMonth" id="startMonth" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Month --</option>
-                            <option value="January">January</option>
-                            <option value="February">February</option>
-                            <option value="March">March</option>
-                            <option value="April">April</option>
-                            <option value="May">May</option>
-                            <option value="June">June</option>
-                            <option value="July">July</option>
-                            <option value="August">August</option>
-                            <option value="September">September</option>
-                            <option value="October">October</option>
-                            <option value="November">November</option>
-                            <option value="December">December</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="startYear" class="block text-sm font-medium text-gray-700">Start Year</label>
-                        <select name="startYear" id="startYear" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Year --</option>
-                            @for($year = date('Y'); $year <= date('Y') + 5; $year++)
-                            <option value="{{ $year }}">{{ $year }}</option>
-                            @endfor
-                        </select>
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="modeOfLearning" class="block text-sm font-medium text-gray-700">Mode of Learning</label>
-                        <select name="modeOfLearning" id="modeOfLearning" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Mode --</option>
-                            <option value="On-Campus">On-Campus</option>
-                            <option value="Online">Online</option>
-                            <option value="Hybrid">Hybrid</option>
-                        </select>
-                    </div>
+                    <div class="md:col-span-2"><h3 class="text-lg font-semibold text-blue-800 mb-4 border-b pb-2">Personal Information</h3></div>
+                    <div><label for="name" class="block text-sm font-medium text-gray-700">Full Name</label><input type="text" name="name" id="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></div>
+                    <div><label for="email" class="block text-sm font-medium text-gray-700">Email Address</label><input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></div>
+                    <div><label for="location" class="block text-sm font-medium text-gray-700">Location</label><input type="text" name="location" id="location" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></div>
+                    <div><label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label><input type="tel" name="phoneNumber" id="phoneNumber" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></div>
+                    <div class="md:col-span-2"><h3 class="text-lg font-semibold text-blue-800 mb-4 border-b pb-2">Course Information</h3></div>
+                    <div><label for="course_id" class="block text-sm font-medium text-gray-700">Select Course</label><select name="course_id" id="course_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required><option value="">-- Select Course --</option>@foreach($coursese as $course)<option value="{{ $course->id }}">{{ $course->name }}</option>@endforeach</select></div>
+                    <div><label for="campus_id" class="block text-sm font-medium text-gray-700">Select Campus</label><select name="campus_id" id="campus_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required><option value="">-- Select Campus --</option>@foreach($campuses as $campus)<option value="{{ $campus->id }}">{{ $campus->name }}</option>@endforeach</select></div>
+                    <div><label for="startMonth" class="block text-sm font-medium text-gray-700">Start Month</label><select name="startMonth" id="startMonth" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required><option value="">-- Select Month --</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select></div>
+                    <div><label for="startYear" class="block text-sm font-medium text-gray-700">Start Year</label><select name="startYear" id="startYear" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required><option value="">-- Select Year --</option>@for($year = date('Y'); $year <= date('Y') + 5; $year++)<option value="{{ $year }}">{{ $year }}</option>@endfor</select></div>
+                    <div class="md:col-span-2"><label for="modeOfLearning" class="block text-sm font-medium text-gray-700">Mode of Learning</label><select name="modeOfLearning" id="modeOfLearning" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required><option value="">-- Select Mode --</option><option value="On-Campus">On-Campus</option><option value="Online">Online</option><option value="Hybrid">Hybrid</option></select></div>
                 </div>
-
-                <div class="flex justify-end mt-8">
-                    <button type="button" @click="open = false" class="mr-4 bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-400 transition">Cancel</button>
-                    <button type="submit" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-800 transition">Submit Application</button>
-                </div>
+                <div class="flex justify-end mt-8"><button type="button" id="cancel-application" class="mr-4 bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-400 transition">Cancel</button><button type="submit" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-800 transition">Submit Application</button></div>
             </form>
         </div>
     </div>
@@ -485,25 +382,16 @@
     <section class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl font-bold text-center text-primary mb-8">Our Valued Partners</h2>
-
             <div class="partners-slider relative overflow-hidden h-32">
                 <div class="partners-track flex absolute left-0 top-0 h-full items-center animate-scroll">
                     @foreach($partners as $partner)
                     <div class="partner-slide mx-8 flex-shrink-0">
-                        <img src="{{ asset('storage/' . $partner->logo) }}"
-                             alt="{{ $partner->name }}"
-                             class="h-20 object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
-                             title="{{ $partner->name }}">
+                        <img src="{{ asset('storage/' . $partner->logo) }}" alt="{{ $partner->name }}" class="h-20 object-contain opacity-80 hover:opacity-100 transition-opacity duration-300" title="{{ $partner->name }}">
                     </div>
                     @endforeach
-
-                    <!-- Duplicate for seamless looping -->
                     @foreach($partners as $partner)
                     <div class="partner-slide mx-8 flex-shrink-0">
-                        <img src="{{ asset('storage/' . $partner->logo) }}"
-                             alt="{{ $partner->name }}"
-                             class="h-20 object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
-                             title="{{ $partner->name }}">
+                        <img src="{{ asset('storage/' . $partner->logo) }}" alt="{{ $partner->name }}" class="h-20 object-contain opacity-80 hover:opacity-100 transition-opacity duration-300" title="{{ $partner->name }}">
                     </div>
                     @endforeach
                 </div>
@@ -515,7 +403,6 @@
     <section id="student-life" class="py-16 bg-gray-100">
         <div class="container mx-auto px-4">
             <h2 class="text-4xl md:text-5xl font-bold text-primary text-center mb-12">Student Life</h2>
-
             <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 max-w-7xl mx-auto">
                 @foreach($galleryItems as $item)
                 @if($item->file_type === 'image')
@@ -525,7 +412,6 @@
                 @endif
                 @endforeach
             </div>
-
             <div class="text-center mt-12">
                 <a href="{{ route('student.gallery') }}" class="inline-block bg-blue-700 text-white px-8 py-4 rounded-full text-xl font-bold hover:bg-blue-800 transition-colors shadow-lg">
                     View Full Gallery
@@ -563,7 +449,7 @@
             <div class="flex flex-col lg:flex-row gap-12">
                 <div class="lg:w-1/2">
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d510528.70323917136!2d36.278633167492444!3d-1.4698621662224913!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1128783fffff%3A0x34ca92a42c32810!2sHewitt%20and%20Bennet%20International%20College!5e0!3m2!1sen!2ske!4v1694245829727!5m2!1sen!2ske" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d255306.42136370696!2d36.764713394531256!3d-1.0386013999999928!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f4fba05870db9%3A0x9f1a0a8708f50e10!2sHewitt%20and%20Bennet%20International%20College%20Limited%20-%20Thika%20Campus!5e0!3m2!1sen!2ske!4v1757499126650!5m2!1sen!2ske" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-6 mt-8">
@@ -600,16 +486,16 @@
                 <div class="lg:w-1/2">
                     <div class="bg-white rounded-lg shadow-lg p-8">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
-                        <form action="" method="POST" class="space-y-6">
+                       <form action="{{ route('contact.store') }}" method="POST" class="space-y-6" id="contact-form">
                             @csrf
                             <div class="grid md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="name" class="block text-gray-700 font-medium mb-2">Your Name</label>
-                                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                    <label for="contact_name" class="block text-gray-700 font-medium mb-2">Your Name</label>
+                                    <input type="text" id="contact_name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required>
                                 </div>
                                 <div>
-                                    <label for="email" class="block text-gray-700 font-medium mb-2">Your Email</label>
-                                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                                    <label for="contact_email" class="block text-gray-700 font-medium mb-2">Your Email</label>
+                                    <input type="email" id="contact_email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required>
                                 </div>
                             </div>
 
@@ -634,21 +520,14 @@
     </section>
 
     <!-- Chatbot -->
-    <div x-data="{ chatbotOpen: false }" class="fixed bottom-8 right-8 z-50">
-        <button @click="chatbotOpen = !chatbotOpen" class="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
+    <div class="fixed bottom-8 right-8 z-50">
+        <button id="chatbot-toggle" class="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
             <i class="fa-solid fa-comments text-xl"></i>
         </button>
-        <div x-show="chatbotOpen" x-transition:enter="chatbot-transition"
-             x-transition:enter-start="opacity-0 transform translate-y-4"
-             x-transition:enter-end="opacity-100 transform translate-y-0"
-             x-transition:leave="chatbot-transition"
-             x-transition:leave-start="opacity-100 transform translate-y-0"
-             x-transition:leave-end="opacity-0 transform translate-y-4"
-             class="absolute bottom-full right-0 w-80 h-96 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col"
-             style="display: none;">
+        <div id="chatbot-container" class="hidden absolute bottom-full right-0 w-80 h-96 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col">
             <div class="p-4 flex justify-between items-center border-b border-gray-200 bg-blue-600 text-white rounded-t-lg">
                 <h3 class="font-semibold">Hewitt & Bennet Chat</h3>
-                <button @click="chatbotOpen = false" class="text-white hover:text-gray-200">&times;</button>
+                <button id="close-chatbot" class="text-white hover:text-gray-200">&times;</button>
             </div>
             <div id="chatbot-messages" class="p-4 overflow-y-auto flex-grow">
                 <div class="mb-2 text-sm text-gray-600 self-start">
@@ -715,76 +594,324 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
-        // Alpine.js components
-        document.addEventListener('alpine:init', () => {
-            // Carousel component
-            Alpine.data('carousel', () => ({
-                currentIndex: 0,
-                totalItems: {{ count($banners) }},
-                interval: null,
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for session flash messages
+            @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#1E3A8A',
+                confirmButtonText: 'Great!'
+            });
+            @endif
 
-                init() {
-                    this.startAutoSlide();
-                },
+            @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#DC2626',
+                confirmButtonText: 'OK'
+            });
+            @endif
 
-                next() {
-                    this.currentIndex = (this.currentIndex + 1) % this.totalItems;
-                    this.restartAutoSlide();
-                },
+            // Mobile menu functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMobileMenu = document.getElementById('close-mobile-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-                prev() {
-                    this.currentIndex = (this.currentIndex - 1 + this.totalItems) % this.totalItems;
-                    this.restartAutoSlide();
-                },
+            if(mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('block');
+                });
+            }
 
-                goTo(index) {
-                    this.currentIndex = index;
-                    this.restartAutoSlide();
-                },
+            if(closeMobileMenu) {
+                closeMobileMenu.addEventListener('click', function() {
+                    mobileMenu.classList.remove('block');
+                    mobileMenu.classList.add('hidden');
+                });
+            }
 
-                startAutoSlide() {
-                    this.interval = setInterval(() => {
-                        this.next();
-                    }, 7000);
-                },
+            if(mobileMenu) {
+                const mobileLinks = mobileMenu.querySelectorAll('a');
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.remove('block');
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
 
-                restartAutoSlide() {
-                    clearInterval(this.interval);
-                    this.startAutoSlide();
+            // Modal functionality
+            const modal = document.getElementById('apply-modal');
+            const applyButtons = document.querySelectorAll('.apply-btn');
+            const closeModal = document.getElementById('close-modal');
+            const cancelButton = document.getElementById('cancel-application');
+            const courseSelect = document.getElementById('course_id');
+
+            function openModal(courseId = '') {
+                if (courseId && courseSelect) {
+                    courseSelect.value = courseId;
                 }
-            }));
+                if(modal) {
+                    modal.style.display = 'flex';
+                    setTimeout(() => {
+                        modal.classList.add('modal-enter');
+                    }, 10);
+                }
+            }
 
-            // Initialize apply buttons to open modal
-            document.querySelectorAll('.apply-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const courseId = btn.getAttribute('data-course');
-                    Alpine.store('modal').open = true;
-                    Alpine.store('modal').selectedCourse = courseId;
+            function closeModalFunc() {
+                if(modal) {
+                    modal.classList.remove('modal-enter');
+                    modal.classList.add('modal-leave');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                        modal.classList.remove('modal-leave');
+                    }, 200);
+                }
+            }
 
-                    // Set the course value in the form if needed
-                    if (courseId) {
-                        document.getElementById('course_id').value = courseId;
+            if(applyButtons.length) {
+                applyButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const courseId = this.getAttribute('data-course');
+                        openModal(courseId);
+                    });
+                });
+            }
+
+            if(closeModal) closeModal.addEventListener('click', closeModalFunc);
+            if(cancelButton) cancelButton.addEventListener('click', closeModalFunc);
+
+            if(modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeModalFunc();
                     }
                 });
-            });
-        });
+            }
 
-        // Simple store for modal state
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('modal', {
-                open: false,
-                selectedCourse: ''
-            });
-        });
+            // Handle enrollment form submission with SweetAlert
+            const enrollmentForm = document.getElementById('enrollment-form');
+            if(enrollmentForm) {
+                enrollmentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
 
-        // Chatbot functionality
-        document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        title: 'Submitting...',
+                        text: 'Please wait while we process your application.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    const formData = new FormData(enrollmentForm);
+
+                    fetch(enrollmentForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if(response.redirected) {
+                            // Success - redirect happened
+                            closeModalFunc();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Application Submitted!',
+                                text: 'Your course application has been submitted successfully! Our team will contact you shortly.',
+                                confirmButtonColor: '#1E3A8A',
+                                confirmButtonText: 'Great!'
+                            }).then(() => {
+                                enrollmentForm.reset();
+                            });
+                            return Promise.reject('redirect');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if(data && data.success === false) {
+                            throw new Error(data.message || 'Submission failed');
+                        } else {
+                            closeModalFunc();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Application Submitted!',
+                                text: data.message || 'Your course application has been submitted successfully! Our team will contact you shortly.',
+                                confirmButtonColor: '#1E3A8A',
+                                confirmButtonText: 'Great!'
+                            }).then(() => {
+                                enrollmentForm.reset();
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        if(error === 'redirect') return;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Submission Error',
+                            text: 'There was an error submitting your application. Please try again or contact us directly.',
+                            confirmButtonColor: '#DC2626',
+                            confirmButtonText: 'OK'
+                        });
+                        console.error('Error:', error);
+                    });
+                });
+            }
+
+            // Handle contact form submission
+            const contactForm = document.getElementById('contact-form');
+            if(contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    Swal.fire({
+                        title: 'Sending Message...',
+                        text: 'Please wait while we send your message.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    const formData = new FormData(contactForm);
+
+                    fetch(contactForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if(response.redirected) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Message Sent!',
+                                text: 'Thank you for your message. We will get back to you soon!',
+                                confirmButtonColor: '#1E3A8A',
+                                confirmButtonText: 'Great!'
+                            }).then(() => {
+                                contactForm.reset();
+                            });
+                            return Promise.reject('redirect');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if(data && data.success === false) {
+                            throw new Error(data.message || 'Failed to send message');
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Message Sent!',
+                                text: data.message || 'Thank you for your message. We will get back to you soon!',
+                                confirmButtonColor: '#1E3A8A',
+                                confirmButtonText: 'Great!'
+                            }).then(() => {
+                                contactForm.reset();
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        if(error === 'redirect') return;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'There was an error sending your message. Please try again or call us directly.',
+                            confirmButtonColor: '#DC2626',
+                            confirmButtonText: 'OK'
+                        });
+                        console.error('Error:', error);
+                    });
+                });
+            }
+
+            // Carousel functionality
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.carousel-item');
+            const dots = document.querySelectorAll('.dot');
+            const prevButton = document.getElementById('carousel-prev');
+            const nextButton = document.getElementById('carousel-next');
+
+            if(slides.length && dots.length) {
+                function showSlide(index) {
+                    slides.forEach(slide => {
+                        slide.classList.remove('opacity-100');
+                        slide.classList.add('opacity-0');
+                    });
+                    dots.forEach(dot => {
+                        dot.classList.remove('active-dot');
+                        dot.classList.add('bg-opacity-50');
+                    });
+                    slides[index].classList.remove('opacity-0');
+                    slides[index].classList.add('opacity-100');
+                    dots[index].classList.add('active-dot');
+                    dots[index].classList.remove('bg-opacity-50');
+                    currentSlide = index;
+                }
+
+                function nextSlide() {
+                    let nextIndex = (currentSlide + 1) % slides.length;
+                    showSlide(nextIndex);
+                }
+
+                function prevSlide() {
+                    let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+                    showSlide(prevIndex);
+                }
+
+                if(prevButton) prevButton.addEventListener('click', prevSlide);
+                if(nextButton) nextButton.addEventListener('click', nextSlide);
+
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        showSlide(index);
+                    });
+                });
+
+                let slideInterval = setInterval(nextSlide, 7000);
+                const carousel = document.getElementById('hero-carousel');
+                if(carousel) {
+                    carousel.addEventListener('mouseenter', () => {
+                        clearInterval(slideInterval);
+                    });
+                    carousel.addEventListener('mouseleave', () => {
+                        slideInterval = setInterval(nextSlide, 7000);
+                    });
+                }
+            }
+
+            // Chatbot functionality
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const closeChatbot = document.getElementById('close-chatbot');
+            const chatbotContainer = document.getElementById('chatbot-container');
             const chatbotMessages = document.getElementById('chatbot-messages');
             const chatbotInput = document.getElementById('chatbot-input');
             const chatbotSend = document.getElementById('chatbot-send');
+
+            if(chatbotToggle) {
+                chatbotToggle.addEventListener('click', function() {
+                    chatbotContainer.classList.toggle('hidden');
+                });
+            }
+
+            if(closeChatbot) {
+                closeChatbot.addEventListener('click', function() {
+                    chatbotContainer.classList.add('hidden');
+                });
+            }
 
             function displayMessage(text, sender) {
                 const msg = document.createElement('div');
@@ -794,17 +921,21 @@
                 chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             }
 
-            chatbotSend.addEventListener('click', () => {
-                const text = chatbotInput.value.trim();
-                if (!text) return;
-                displayMessage(text, 'user');
-                chatbotInput.value = '';
-                setTimeout(() => displayMessage("Thank you! We'll be in touch.", 'bot'), 500);
-            });
+            if(chatbotSend) {
+                chatbotSend.addEventListener('click', () => {
+                    const text = chatbotInput.value.trim();
+                    if (!text) return;
+                    displayMessage(text, 'user');
+                    chatbotInput.value = '';
+                    setTimeout(() => displayMessage("Thank you for your interest in Hewitt and Bennet International College! Our team will contact you shortly with more information about our programs and admission process.", 'bot'), 500);
+                });
+            }
 
-            chatbotInput.addEventListener('keypress', e => {
-                if (e.key === 'Enter') chatbotSend.click();
-            });
+            if(chatbotInput) {
+                chatbotInput.addEventListener('keypress', e => {
+                    if (e.key === 'Enter') chatbotSend.click();
+                });
+            }
         });
     </script>
 </body>

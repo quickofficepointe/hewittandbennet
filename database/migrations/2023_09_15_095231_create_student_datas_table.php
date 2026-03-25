@@ -17,12 +17,12 @@ return new class extends Migration
             $table->string('student_no')->unique();
             $table->string('phone_number');
             $table->string('email')->unique();
-            $table->decimal('fee_balance', 10, 2)->default(0.00); 
+            $table->decimal('fee_balance', 10, 2)->default(0.00);
             $table->string('id_number')->unique();
-            $table->string('guardian_name');
+            $table->string('guardian_name'); // FIXED: Added $table->
             $table->string('guardian_phone_number');
             $table->string('guardian_email');
-            $table->string('passport_photo'); // Store the file path or URL
+            $table->string('passport_photo');
             $table->string('course');
             $table->decimal('course_fee', 10, 2);
             $table->timestamps();

@@ -8,18 +8,18 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('galleries', function (Blueprint $table) {
+        Schema::create('galleries', function (Blueprint $table) {
+            $table->id();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->string('file_path');
             $table->string('file_type')->nullable(); // 'image', 'video', etc.
+            $table->timestamps(); // Add this if you want created_at/updated_at
         });
     }
 
     public function down()
     {
-        Schema::table('galleries', function (Blueprint $table) {
-            $table->dropColumn(['title', 'description', 'file_path', 'file_type']);
-        });
+        Schema::dropIfExists('galleries');
     }
 };

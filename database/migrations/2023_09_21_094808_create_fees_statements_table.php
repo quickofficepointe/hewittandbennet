@@ -20,8 +20,8 @@ return new class extends Migration
             $table->timestamp('payment_date');
             // Add any other relevant fields for fee statements
 
-            // Foreign Key Constraint to reference student_data by student_no
-            $table->foreign('student_no')->references('student_no')->on('student_data');
+            // Foreign Key Constraint - FIXED: changed 'student_data' to 'student_datas'
+            $table->foreign('student_no')->references('student_no')->on('student_datas');
             $table->timestamps();
         });
     }

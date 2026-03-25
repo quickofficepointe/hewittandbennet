@@ -37,7 +37,7 @@ use App\Models\hewitt_banners;
 use App\Models\student_scores;
 use App\Models\Team;
 use App\Models\Campus;
-use App\Models\Partner;
+use App\Models\partner;
 
 Route::get('/', function () {
     // Fetch data for banners
@@ -94,7 +94,11 @@ Route::group(['middleware' => ['auth', 'isStaff', 'PreventBackHistory']], functi
     Route::get('/staff/students', [App\Http\Controllers\StaffController::class, 'index'])->name('staff.onlineregister');
     Route::get('/staff/news', [App\Http\Controllers\NewsandeventController::class, 'index'])->name('newsandevent.index');
     Route::post('/news', [App\Http\Controllers\NewsandeventController::class, 'store'])->name('newsandevent.store');
-
+   // Contact Messages Routes
+    Route::get('/contact-messages', [App\Http\Controllers\ContactController::class, 'index'])->name('contact.messages.index');
+    Route::get('/contact-messages/{id}', [App\Http\Controllers\ContactController::class, 'show'])->name('contact.messages.show');
+    Route::patch('/contact-messages/{id}/read', [App\Http\Controllers\ContactController::class, 'markAsRead'])->name('contact.messages.read');
+    Route::delete('/contact-messages/{id}', [App\Http\Controllers\ContactController::class, 'destroy'])->name('contact.messages.destroy');
     //routes for campuses
     Route::get('/campuses', [CampusController::class, 'index'])->name('campuses.index');
     Route::post('/campuses', [CampusController::class, 'store'])->name('campuses.store');
@@ -237,3 +241,4 @@ Route::post('/partners/store', [PartnerController::class, 'store'])->name('partn
 
 Route::put('/partners/update/{id}', [PartnerController::class, 'update'])->name('partners.update');
 Route::delete('/partners/destroy/{id}', [PartnerController::class, 'destroy'])->name('partners.destroy');
+Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
