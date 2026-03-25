@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\department;
+use App\Models\Department;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DepartmentController extends Controller
 {
@@ -12,7 +14,8 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+        $departments = Department::all();
+        return view('dashboards.staff.courses.deptindex', compact('departments'));
     }
 
     /**
@@ -30,18 +33,28 @@ class DepartmentController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string',
+            'slug' => 'nullable|string|unique:departments,slug',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Auto-generate slug from name
+        $validatedData['slug'] = Str::slug($validatedData['name']);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('department_images', 'public');
+            $validatedData['image'] = $imagePath;
+        }
 
         Department::create($validatedData);
 
-         return redirect()->back()->with('success', 'Department created successfully.');
+        return redirect()->back()->with('success', 'Department created successfully.');
     }
-
 
     /**
      * Display the specified resource.
      */
-    public function show(department $department)
+    public function show(Department $department)
     {
         //
     }
@@ -50,19 +63,30 @@ class DepartmentController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Department $department)
-{
-    return view('dashboards.staff.courses.edit.deptedit', compact('department'));
-}
-
+    {
+        return view('dashboards.staff.courses.edit.deptedit', compact('department'));
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, department $department)
+    public function update(Request $request, Department $department)
     {
         $validatedData = $request->validate([
             'name' => 'required|string',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($department->image) {
+                Storage::disk('public')->delete($department->image);
+            }
+
+            $imagePath = $request->file('image')->store('department_images', 'public');
+            $validatedData['image'] = $imagePath;
+        }
 
         $department->update($validatedData);
 
@@ -72,12 +96,15 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(department $department)
-{
-    $department->delete();
+    public function destroy(Department $department)
+    {
+        // Delete associated image if exists
+        if ($department->image) {
+            Storage::disk('public')->delete($department->image);
+        }
 
-    return redirect()->back()->with('success', 'Department deleted successfully.');
-}
+        $department->delete();
 
-
+        return redirect()->back()->with('success', 'Department deleted successfully.');
+    }
 }

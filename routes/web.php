@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\CampusController;
+use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\FeesstructureController;
 use App\Http\Controllers\OnlineExamsController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\StudentController;
@@ -9,6 +12,9 @@ use App\Http\Controllers\StudentDataController;
 use App\Http\Controllers\StudentExamsController;
 use App\Http\Controllers\StudentResponsesController;
 use App\Http\Controllers\StudentScoresController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\TiktokvidController;
 use App\Http\Controllers\TutorController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -26,28 +32,41 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Course; // Assuming your Course model is in the App\Models namespace
 use App\Models\courses;
 use App\Models\department;
+use App\Models\Gallery;
 use App\Models\hewitt_banners;
 use App\Models\student_scores;
+use App\Models\Team;
+use App\Models\Campus;
+use App\Models\Partner;
 
 Route::get('/', function () {
     // Fetch data for banners
     $banners = hewitt_banners::where('status', true)->get();
+    // Fetch all courses
     $coursese = Courses::all();
+    // fetch campus
+    $campuses = Campus::all();
+    $partners = Partner::all(); // Fetch all partners
     // Fetch data for each department's first three courses
     $shortDepartments = Department::where('name', 'like', '%caregiver%')->pluck('id');
     $hospitalityDepartments = Department::where('name', 'like', '%Hospitality%')->pluck('id');
     $othercourses = Department::where('name', 'like', '%other%')->pluck('id');
     $nursingDepartments = Department::where('name', 'like', '%nursing%')->pluck('id');
-
     $shortCourses = Courses::whereIn('department_id', $shortDepartments)->take(3)->get();
     $hospitalityCourses = Courses::whereIn('department_id', $hospitalityDepartments)->take(3)->get();
     $othercourses = Courses::whereIn('department_id', $othercourses)->take(3)->get();
     $nursingCourses = Courses::whereIn('department_id', $nursingDepartments)->take(3)->get();
+    $galleryItems = Gallery::where('file_type', 'image')->latest()->take(15)->get(); // or ->inRandomOrder()
 
+    // ✅ Fetch team members
+    $teams = Team::all();
     return view('welcome', [
         'banners' => $banners,
+        'teams' => $teams,'partners' => $partners,
+        'galleryItems' => $galleryItems,
         'shortCourses' => $shortCourses,
         'coursese' => $coursese,
+        'campuses' => $campuses,
         'hospitalityCourses' => $hospitalityCourses,
         'othercourses' => $othercourses,
         'nursingCourses' => $nursingCourses,
@@ -61,49 +80,73 @@ Auth::routes(['verify' => true]);
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('verified');
-Route::group(['middleware' => ['auth', 'isDirector' ,'PreventBackHistory']], function () {
-Route::get('/director/dashboard', [App\Http\Controllers\DirectorController::class,'dashboard'])->name('director.dashboard');
-Route::get('users', [App\Http\Controllers\UserController::class, 'index'])->name('index.users');
-Route::get('users/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
-Route::put('/users/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
-Route::delete('users/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('users.destroy');
-
+Route::group(['middleware' => ['auth', 'isDirector', 'PreventBackHistory']], function () {
+    Route::get('/director/dashboard', [App\Http\Controllers\DirectorController::class, 'dashboard'])->name('director.dashboard');
+    Route::get('users', [App\Http\Controllers\UserController::class, 'index'])->name('index.users');
+    Route::get('users/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+    Route::delete('users/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('users.destroy');
 });
 
-Route::group(['middleware' => ['auth', 'isStaff','PreventBackHistory']], function () {
+Route::group(['middleware' => ['auth', 'isStaff', 'PreventBackHistory']], function () {
     // Staff routes
-Route::get('/staff/dashboard', [App\Http\Controllers\StaffController::class,'dashboard'])->name('staff.dashboard');
-Route::get('/staff/students', [App\Http\Controllers\StaffController::class,'index'])->name('staff.onlineregister');
-Route::get('/staff/news', [App\Http\Controllers\NewsandeventController::class,'index'])->name('newsandevent.index');
-Route::post('/news', [App\Http\Controllers\NewsandeventController::class, 'store'])->name('newsandevent.store');
+    Route::get('/staff/dashboard', [App\Http\Controllers\StaffController::class, 'dashboard'])->name('staff.dashboard');
+    Route::get('/staff/students', [App\Http\Controllers\StaffController::class, 'index'])->name('staff.onlineregister');
+    Route::get('/staff/news', [App\Http\Controllers\NewsandeventController::class, 'index'])->name('newsandevent.index');
+    Route::post('/news', [App\Http\Controllers\NewsandeventController::class, 'store'])->name('newsandevent.store');
 
-// Route to update an existing news/event
-Route::put('/news/{id}', [App\Http\Controllers\NewsandeventController::class, 'update'])->name('newsandevent.update');
+    //routes for campuses
+    Route::get('/campuses', [CampusController::class, 'index'])->name('campuses.index');
+    Route::post('/campuses', [CampusController::class, 'store'])->name('campuses.store');
+    Route::put('/campuses/{campus}', [CampusController::class, 'update'])->name('campuses.update');
+    Route::delete('/campuses/{campus}', [CampusController::class, 'destroy'])->name('campuses.destroy');
 
-// Optional: Route to delete a news/event
-Route::delete('/news/{id}', [App\Http\Controllers\NewsandeventController::class, 'destroy'])->name('newsandevent.destroy');
-// Route to store new gallery item
-Route::post('/store/gallery', [App\Http\Controllers\GalleryController::class, 'store'])->name('gallery.store');
-Route::get('/create/gallery', [App\Http\Controllers\GalleryController::class, 'create'])->name('gallery.index');
-// Route to update an existing gallery item
-Route::put('/update/{gallery}', [App\Http\Controllers\GalleryController::class, 'update'])->name('gallery.update');
+    // routes for tiktok videos
+    Route::get('/tiktok-videos', [TiktokvidController::class, 'index'])->name('tiktok-videos.index');
+    Route::post('/tiktok-videos', [TiktokvidController::class, 'store'])->name('tiktok-videos.store');
+    Route::put('/tiktok-videos/{tiktokvid}', [TiktokvidController::class, 'update'])->name('tiktok-videos.update');
+    Route::delete('/tiktok-videos/{tiktokvid}', [TiktokvidController::class, 'destroy'])->name('tiktok-videos.destroy');
 
-// Route to delete a gallery item (optional)
-Route::delete('/delete/{gallery}', [App\Http\Controllers\GalleryController::class, 'destroy'])->name('gallery.destroy');
+    // Testimonials routes
+    Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
+    Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonial.store');
+    Route::put('/testimonials/{testimonial}', [TestimonialController::class, 'update'])->name('testimonials.update');
+    Route::delete('/testimonials/{testimonial}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
+
+    //routes for teams
+    Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
+    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
+    Route::put('/teams/{team}', [TeamController::class, 'update'])->name('teams.update');
+    Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->name('teams.destroy');
+
+    // Route to update an existing news/event
+    Route::put('/news/{id}', [App\Http\Controllers\NewsandeventController::class, 'update'])->name('newsandevent.update');
+
+    // Optional: Route to delete a news/event
+    Route::delete('/news/{id}', [App\Http\Controllers\NewsandeventController::class, 'destroy'])->name('newsandevent.destroy');
+    // Route to store new gallery item
+    Route::post('/store/gallery', [App\Http\Controllers\GalleryController::class, 'store'])->name('gallery.store');
+    Route::get('/create/gallery', [App\Http\Controllers\GalleryController::class, 'create'])->name('gallery.index');
+    // Route to update an existing gallery item
+    Route::put('/update/{gallery}', [App\Http\Controllers\GalleryController::class, 'update'])->name('gallery.update');
+
+    // Route to delete a gallery item (optional)
+    Route::delete('/delete/{gallery}', [App\Http\Controllers\GalleryController::class, 'destroy'])->name('gallery.destroy');
 });
 
-Route::group(['middleware' => ['auth', 'isStudent','PreventBackHistory']], function () {
+Route::group(['middleware' => ['auth', 'isStudent', 'PreventBackHistory']], function () {
     // Student routes
-Route::get('/student/dashboard', [App\Http\Controllers\StudentController::class,'dashboard'])->name('student.dashboard');
+    Route::get('/student/dashboard', [App\Http\Controllers\StudentController::class, 'dashboard'])->name('student.dashboard');
 });
 
-Route::group(['middleware' => ['auth', 'isTutor','PreventBackHistory']], function () {
+Route::group(['middleware' => ['auth', 'isTutor', 'PreventBackHistory']], function () {
     // Tutor routes
-Route::get('/tutor/dashboard', [App\Http\Controllers\TutorController::class,'dashboard'])->name('tutor.dashboard');
+    Route::get('/tutor/dashboard', [App\Http\Controllers\TutorController::class, 'dashboard'])->name('tutor.dashboard');
 });
 
 Route::get('/paymentsreceipt', [App\Http\Controllers\PaymentreceiptController::class, 'index'])->name('Paymentreceipt.index');
-Route::get('/payment-receipts/{id}/print', [App\Http\Controllers\PaymentreceiptController::class, 'print'])->name('payment-receipts.print');Route::post('/payment-receipts', [App\Http\Controllers\PaymentreceiptController::class, 'store'])->name('payment-receipts.store');
+Route::get('/payment-receipts/{id}/print', [App\Http\Controllers\PaymentreceiptController::class, 'print'])->name('payment-receipts.print');
+Route::post('/payment-receipts', [App\Http\Controllers\PaymentreceiptController::class, 'store'])->name('payment-receipts.store');
 
 Route::get('/index', [App\Http\Controllers\HewittBannersController::class, 'index'])->name('hewitt_banners.index');
 Route::post('/hewitt_bannerspost', [App\Http\Controllers\HewittBannersController::class, 'store'])->name('hewitt_banners.store');
@@ -125,9 +168,10 @@ Route::get('/courses/hosipitality', [App\Http\Controllers\CoursesController::cla
 Route::post('/registercourse', [App\Http\Controllers\CourseapplicationController::class,  'store'])->name('courseregistration.store');
 Route::get('/course/department', [App\Http\Controllers\CoursesController::class,  'index'])->name('index.cdpert');
 Route::post('/coursesstore', [App\Http\Controllers\CoursesController::class,  'store'])->name('courses.store');
-Route::post('/departmentstore', [App\Http\Controllers\DepartmentController::class,  'store'])->name('departments.store');
 Route::get('/accreditations', [App\Http\Controllers\CoursesController::class, 'accreditations'])->name('hewitt_Captain.accreditations');
 // Routes for Department
+Route::get('/departments', [App\Http\Controllers\DepartmentController::class,  'index'])->name('index.departments');
+Route::post('/departmentstore', [App\Http\Controllers\DepartmentController::class,  'store'])->name('departments.store');
 Route::get('/departments/{department}/edit', [App\Http\Controllers\DepartmentController::class,  'edit'])->name('departments.edit');
 Route::put('/departments/{department}', [App\Http\Controllers\DepartmentController::class,  'update'])->name('departments.update');
 Route::delete('/departmentsdelete/{department}', [App\Http\Controllers\DepartmentController::class,  'destroy'])->name('departments.destroy');
@@ -158,20 +202,20 @@ Route::post('/registration/submit', [App\Http\Controllers\RegistrationformContro
 Route::get('/registrationforms', [App\Http\Controllers\RegistrationformController::class, 'registrationforms'])->name('registrationforms.index');
 
 //workabroad
-Route::get('/workabroad', [App\Http\Controllers\WorkabroadController::class,'index'])->name('workabroad.index');
-Route::get('/students/create', [StudentDataController::class,'create'])->name('students.create');
-Route::post('/students', [StudentDataController::class,'store'])->name('students.store');
-Route::get('/get-student-info/{studentNumber}', [App\Http\Controllers\PaymentreceiptController::class,'getStudentInfo']);
-Route::put('/students/{student}',  [StudentDataController::class,'update'])->name('students.update');
-Route::get('/students/{student}/edit',[StudentDataController::class,'edit'])->name('students.edit');
-Route::get('/student/fee-statement', [FeesstructureController::class,'index'])->name('fee-statement.index');
+Route::get('/workabroad', [App\Http\Controllers\WorkabroadController::class, 'index'])->name('workabroad.index');
+Route::get('/students/create', [StudentDataController::class, 'create'])->name('students.create');
+Route::post('/students', [StudentDataController::class, 'store'])->name('students.store');
+Route::get('/get-student-info/{studentNumber}', [App\Http\Controllers\PaymentreceiptController::class, 'getStudentInfo']);
+Route::put('/students/{student}',  [StudentDataController::class, 'update'])->name('students.update');
+Route::get('/students/{student}/edit', [StudentDataController::class, 'edit'])->name('students.edit');
+Route::get('/student/fee-statement', [FeesstructureController::class, 'index'])->name('fee-statement.index');
 Route::get('tutor_exams', [OnlineExamsController::class, 'index'])->name('tutor_exams.index');
 
 // Store a new online exam
 Route::post('/online_exams', [OnlineExamsController::class, 'store'])->name('online_exams.store');
 Route::post('/questions', [QuestionsController::class, 'store'])->name('questions.store');
 
-Route::get('all_exams', [QuestionsController::class,'index'])->name('exams_all.index');
+Route::get('all_exams', [QuestionsController::class, 'index'])->name('exams_all.index');
 Route::get('/exams/start/{exam}', [QuestionsController::class, 'start'])->name('exams.start');
 
 Route::post('/responses', [StudentResponsesController::class, 'store'])->name('exams.submit');
@@ -184,3 +228,12 @@ Route::get('/student/my-scores', [StudentController::class, 'myscores'])->name('
 Route::get('/hewittandbennet/news', [App\Http\Controllers\NewsandeventController::class, 'newsfront'])->name('news.event');
 
 Route::get('news-and-events/{slug}', [App\Http\Controllers\NewsandeventController::class, 'show'])->name('newsandevent.show');
+
+
+Route::get('/course/{slug}', [CoursesController::class, 'showSingleCourse'])->name('course.single');
+Route::get('/courses', [CoursesController::class, 'allcourses'])->name('courses.all');// Partners Routes
+Route::get('/partners', [PartnerController::class, 'index'])->name('partners.show');
+Route::post('/partners/store', [PartnerController::class, 'store'])->name('partners.store');
+
+Route::put('/partners/update/{id}', [PartnerController::class, 'update'])->name('partners.update');
+Route::delete('/partners/destroy/{id}', [PartnerController::class, 'destroy'])->name('partners.destroy');

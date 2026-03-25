@@ -1,49 +1,42 @@
 @extends('dashboards.staff.layouts.stafflayout')
 
+@section('pageTitle', 'Registered Users')
+
 @section('content')
-
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Registered Users</h3>
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-bold text-primary">Registered Users</h2>
     </div>
-    <!-- /.card-header -->
-    <div class="card-body">
-        <!-- Responsive Table Wrapper -->
-        <div class="table-responsive">
-            <table id="example1" class="table table-bordered table-striped">
-                <thead>
+
+    <div class="overflow-x-auto">
+        <table id="registeredUsersTable" class="min-w-full display nowrap" style="width:100%">
+            <thead class="bg-gray-50">
                 <tr>
-                    <th>Student Name</th>
-                    <th>Student Email</th>
-                    <th>Location</th>
-                    <th>Phone Number</th>
-                    <th>Course</th>
-                    <th>Application Date</th>
-                    <th>Start Month</th>
-                    <th>Start Year</th>
-                    <th>Mode Of Learning</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Email</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone Number</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Application Date</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Month</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Year</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mode Of Learning</th>
                 </tr>
-                </thead>
-                <tbody>
-                    @foreach ($courseapplications as $courseapplications)
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @foreach ($courseapplications as $application)
                     <tr>
-                        <td>{{ $courseapplications->name }}</td>
-                        <td>{{ $courseapplications->email }}</td>
-                        <td>{{$courseapplications->location }}</td>
-                        <td>{{ $courseapplications->phoneNumber }}</td>
-                        <td>{{ $courseapplications->course }}</td>
-                        <td>{{ \Carbon\Carbon::parse($courseapplications->timestamp)->format('d/m/Y H:i:s') }}</td>
-                        <td>{{ $courseapplications->startMonth }}</td>
-                        <td>{{ $courseapplications->startYear }}</td>
-                        <td>{{ $courseapplications->modeOfLearning }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $application->name }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $application->email }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $application->location }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $application->phoneNumber }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $application->course }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($application->timestamp)->format('d/m/Y H:i:s') }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $application->startMonth }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $application->startYear }}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">{{ $application->modeOfLearning }}</td>
                     </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    <!-- /.card-body -->
-</div>
-<!-- /.card -->
-
 @endsection

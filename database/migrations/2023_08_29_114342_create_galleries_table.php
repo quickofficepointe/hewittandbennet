@@ -6,22 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('galleries', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('galleries', function (Blueprint $table) {
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->string('file_path');
+            $table->string('file_type')->nullable(); // 'image', 'video', etc.
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('galleries');
+        Schema::table('galleries', function (Blueprint $table) {
+            $table->dropColumn(['title', 'description', 'file_path', 'file_type']);
+        });
     }
 };

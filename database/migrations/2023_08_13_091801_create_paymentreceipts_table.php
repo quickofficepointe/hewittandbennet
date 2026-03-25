@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paymentreceipts', function (Blueprint $table) {
+          Schema::create('paymentreceipts', function (Blueprint $table) {
             $table->id();
             $table->string('ReceiptNo');
             $table->unsignedBigInteger('user_id')->nullable(); // Nullable foreign key for the user
@@ -29,6 +29,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('served_by')->references('id')->on('users');
         });
+
     }
 
     /**

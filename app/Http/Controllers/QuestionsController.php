@@ -11,11 +11,11 @@ class QuestionsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $exams = online_exams::all();
-        return view('dashboards.student.onlineexams.index',compact('exams'));
-    }
+  public function index()
+{
+    $exams = online_exams::all();
+    return view('dashboards.student.onlineexams.index', compact('exams'));
+}
 
 
     public function start($online_exams_id, $set = 1)

@@ -21,11 +21,13 @@ class NewsandeventController extends Controller
         return view('dashboards.staff.newsandevent.index', compact('newsEvents'));
     }
 
-    public function newsfront()
-    {
-        $newsEvents = newsandevent::orderBy('created_at', 'desc')->get();
-        return view('frontendviews.newsandevents.index', compact('newsEvents'));
-    }
+  public function newsfront()
+{
+    $newsEvents = newsandevent::orderBy('created_at', 'desc')
+        ->paginate(10); // change 10 to the number of items per page
+
+    return view('frontendviews.newsandevents.index', compact('newsEvents'));
+}
 
     /**
      * Show the form for creating a new resource.

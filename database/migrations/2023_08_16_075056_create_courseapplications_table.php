@@ -13,15 +13,21 @@ return new class extends Migration
     {
         Schema::create('courseapplications', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('location');
-            $table->string('phoneNumber');
-            $table->string('course');
-            $table->string('startMonth');
-            $table->string('startYear');
-            $table->string('status')->nullable();
-            $table->string('modeOfLearning'); // Add the mode of learning field
+             $table->string('name');
+    $table->string('email');
+    $table->string('location');
+    $table->string('phoneNumber');
+
+    // Replace string 'course' with foreign key
+    $table->foreignId('course_id')->constrained()->onDelete('cascade');
+
+    // Add campus_id foreign key (assuming you have a campuses table)
+    $table->foreignId('campus_id')->constrained()->onDelete('cascade');
+
+    $table->string('startMonth');
+    $table->string('startYear');
+    $table->string('status')->nullable();
+    $table->string('modeOfLearning');
             $table->timestamps();
         });
     }

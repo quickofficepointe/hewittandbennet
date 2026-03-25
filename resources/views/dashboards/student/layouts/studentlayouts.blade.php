@@ -6,285 +6,270 @@
   <link rel="icon" href="{{ asset('assets/img/hbiclogo.jpeg') }}" type="image/png">
   <title>Hewitt and Bennet International College | Student Dashboard</title>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
-  <!-- DataTables -->
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.11.0/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
-  <!-- Summernote -->
-  <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
-  <style>
-    .sidebar-dark-primary {
-        background-color: #1148C9;
-        color: #ffffff; /* White text color */
+
+  <!-- Tailwind CSS via CDN (for demo purposes; better to use built version in production) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#1148C9',
+              600: '#0e3ca5',
+              700: '#0c3187',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
     }
- </style>
+  </script>
+
+  <style>
+    .sidebar-transition {
+      transition: all 0.3s ease;
+    }
+
+    .dataTables_wrapper {
+      padding: 0;
+    }
+
+    /* Custom scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c5c5c5;
+      border-radius: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+  </style>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-
-        <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-          <!-- Left navbar links -->
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-              <a href="/" class="nav-link">Home</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-              <a href="#" class="nav-link">Contact</a>
-            </li>
-          </ul>
-
-          <!-- Right navbar links -->
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item d-none d-sm-inline-block">
-              <a class="nav-link" href="{{ route('logout') }}"
-                 onclick="event.preventDefault();
-                         document.getElementById('logout-form').submit();">
-                <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
-              </a>
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-              </form>
-            </li>
-          </ul>
-
-          <!-- Control Sidebar Toggle Button -->
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
-                <i class="fas fa-th-large"></i>
-              </a>
-            </li>
-          </ul>
-        </nav>
-        <!-- /.navbar -->
-    </div>
-
-    <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <!-- Brand Logo -->
-        <a href="/" class="brand-link">
-          <img src="{{ asset('assets/img/hbiclogo.jpeg') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-          <span class="brand-text font-weight-light">{{ Auth::user()->username }}</span>
-        </a>
-
+<body class="font-sans bg-gray-50 text-gray-800">
+    <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar">
-            <!-- Sidebar user panel (optional) -->
+        <aside class="sidebar-transition w-64 bg-primary-500 text-white flex flex-col flex-shrink-0">
+            <!-- Brand Logo -->
+            <div class="flex items-center justify-between p-4 border-b border-primary-600">
+                <div class="flex items-center space-x-3">
+                    <img src="{{ asset('assets/img/hbiclogo.jpeg') }}" alt="HBIC Logo" class="w-10 h-10 rounded-full">
+                    <span class="text-lg font-semibold truncate">{{ Auth::user()->username }}</span>
+                </div>
+                <button id="sidebarToggle" class="md:hidden text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
 
             <!-- Sidebar Menu -->
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                  <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+            <nav class="flex-1 overflow-y-auto custom-scrollbar py-4">
+                <ul class="space-y-1 px-2">
+                    <li>
+                        <a href="{{ route('student.dashboard') }}" class="flex items-center p-3 rounded-lg bg-primary-600 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span>MY APPLICATIONS</span>
+                        </a>
+                    </li>
 
-                  <!-- Dashboard -->
-                  <li class="nav-item">
-                    <a href="{{ route('student.dashboard') }}" class="nav-link active">
-                      <i class="nav-icon fas fa-tachometer-alt"></i>
-                      <p>
-                        MY APPLICATIONS
-                      </p>
-                    </a>
-                  </li>
+                    <li>
+                        <a href="{{ route('fee-statement.index') }}" class="flex items-center p-3 rounded-lg hover:bg-primary-600 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Fees Statement</span>
+                        </a>
+                    </li>
 
-                  <li class="nav-item">
-                    <a href="{{ route('fee-statement.index') }}" class="nav-link active">
-                      <i class="nav-icon fas fa-tachometer-alt"></i>
-                      <p>
-                      Fees Statement
-                      </p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('student.courses') }}" class="nav-link active">
-                      <i class="nav-icon fas fa-tachometer-alt"></i>
-                      <p>
-                       My Courses
-                      </p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('exams_all.index') }}" class="nav-link active">
-                      <i class="nav-icon fas fa-tachometer-alt"></i>
-                      <p>
-                       My Exams
-                      </p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ route('student.my-scores') }}" class="nav-link active">
-                      <i class="nav-icon fas fa-tachometer-alt"></i>
-                      <p>
-                       My Scores
-                      </p>
-                    </a>
-                  </li>
-                  <!-- Articles -->
+                    <li>
+                        <a href="{{ route('student.courses') }}" class="flex items-center p-3 rounded-lg hover:bg-primary-600 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                            <span>My Courses</span>
+                        </a>
+                    </li>
 
-                  <!-- Logout -->
-                <li class="nav-item">
-                    <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="nav-icon fas fa-sign-out-alt"></i> <!-- Font Awesome icon for logout -->
-                        <span class="nav-text">Logout</span>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </li>
+                    <li>
+                        <a href="{{ route('exams_all.index') }}" class="flex items-center p-3 rounded-lg hover:bg-primary-600 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                            <span>My Exams</span>
+                        </a>
+                    </li>
 
+                    <li>
+                        <a href="{{ route('student.my-scores') }}" class="flex items-center p-3 rounded-lg hover:bg-primary-600 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <span>My Scores</span>
+                        </a>
+                    </li>
+
+                    <li class="pt-10 mt-10 border-t border-primary-600">
+                        <a href="{{ route('logout') }}" class="flex items-center p-3 rounded-lg hover:bg-primary-600 text-white" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            <span>Logout</span>
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </li>
                 </ul>
             </nav>
-            <!-- /.sidebar-menu -->
-        </div>
-        <!-- /.sidebar -->
-    </aside>
+        </aside>
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0">Dashboard</h1>
-                    </div><!-- /.col -->
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item active">Student Dashboard</li>
-                        </ol>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
-        <!-- /.content-header -->
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center">
+                        <button id="mobileSidebarToggle" class="md:hidden text-gray-600 mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <h1 class="text-xl font-semibold">Dashboard</h1>
+                    </div>
 
-        <!-- Main content -->
-        <section class="content">
-            @yield('content')
-        </section>
-        <!-- /.content -->
+                    <div class="flex items-center space-x-4">
+                        <a href="/" class="text-gray-600 hover:text-primary-500">Home</a>
+                        <a href="#" class="text-gray-600 hover:text-primary-500">Contact</a>
+                        <a href="{{ route('logout') }}" class="flex items-center text-gray-600 hover:text-primary-500" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Breadcrumb -->
+                <div class="px-6 py-2 bg-gray-100 text-sm">
+                    <ol class="flex items-center space-x-2">
+                        <li><a href="/" class="text-primary-500 hover:text-primary-600">Home</a></li>
+                        <li class="text-gray-400">/</li>
+                        <li class="text-gray-600">Student Dashboard</li>
+                    </ol>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <section>
+                    @yield('content')
+                </section>
+            </main>
+
+            <!-- Footer -->
+            <footer class="bg-white border-t py-4 px-6 text-sm text-gray-600">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <strong>Copyright &copy; <span id="current-year"></span> <a href="" class="text-primary-500 hover:text-primary-600">HewittandBennetInternationalCollege</a>.</strong>
+                        All rights reserved.
+                    </div>
+                    <div class="mt-2 md:mt-0">
+                        <!-- Optional footer content -->
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
-    <!-- /.content-wrapper -->
-
-    <footer class="main-footer">
-        <strong>Copyright &copy; <span id="current-year"></span> <a href="">HewittandBennetInternationalCollege</a>.</strong>
-        All rights reserved.
-        <div class="float-right d-none d-sm-inline-block">
-            <b></b>
-        </div>
-    </footer>
 
     <script>
         const currentYear = new Date().getFullYear();
         document.getElementById("current-year").textContent = currentYear;
+
+        // Mobile sidebar toggle
+        document.getElementById('mobileSidebarToggle').addEventListener('click', function() {
+            const sidebar = document.querySelector('aside');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('absolute');
+            sidebar.classList.toggle('z-20');
+            sidebar.classList.toggle('h-full');
+        });
+
+        // For larger screens, we can keep the sidebar always visible
+        function handleResize() {
+            const sidebar = document.querySelector('aside');
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('hidden', 'absolute', 'z-20');
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial call
     </script>
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
-</div>
-<!-- ./wrapper -->
-<!-- jQuery -->
-<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-    $.widget.bridge('uibutton', $.ui.button);
-</script>
-<!-- Bootstrap 4 -->
-<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- ChartJS -->
-<script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
-<!-- Sparkline -->
-<script src="{{ asset('plugins/sparklines/sparkline.js') }}"></script>
-<!-- JQVMap -->
-<script src="{{ asset('plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{ asset('plugins/jquery-knob/jquery.knob.min.js') }}"></script>
-<!-- daterangepicker -->
-<script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
-<script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{ asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-<!-- Summernote -->
-<script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
-<!-- overlayScrollbars -->
-<script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('dist/js/adminlte.js') }}"></script>
+    <!-- jQuery -->
+    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 
-<!-- DataTables -->
-<script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.min.js"></script>
-<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
-<script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
-<script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.min.js"></script>
 
-<script>
-     $(document).ready(function() {
-        $('#summernote').summernote({
-            placeholder: 'Write your content here...', // Optional placeholder text for the textarea
-            height: 300 // Set the height of the editor (in pixels)
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTables
+            $('.data-table').DataTable({
+                responsive: true,
+                autoWidth: false,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search...",
+                },
+                dom: '<"flex flex-col md:flex-row md:items-center md:justify-between"<"mb-4 md:mb-0"l><"flex"<"mr-4"f><"mb-4 md:mb-0"B>>>rt<"flex flex-col md:flex-row md:items-center md:justify-between"<"mb-4 md:mb-0"i><"md:flex"p>>',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        className: 'bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg text-sm font-medium'
+                    },
+                    {
+                        extend: 'csv',
+                        className: 'bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg text-sm font-medium'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg text-sm font-medium'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg text-sm font-medium'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg text-sm font-medium'
+                    }
+                ]
+            });
         });
-    });
-  $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $("#myDataTable").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#myDataTable_wrapper .col-md-6:eq(0)');
-    $("#messages-table").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#messages-table_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });
-</script>
+    </script>
 </body>
 </html>
