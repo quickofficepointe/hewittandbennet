@@ -366,29 +366,41 @@
                     </a>
 
                     <!-- Administration Section -->
-                    <div class="pt-4 pb-2">
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4">Administration</p>
-                    </div>
-                    <a href="{{ route('index.departments') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
-                        <i class="fas fa-building w-5 text-gray-400 group-hover:text-primary-600"></i>
-                        <span class="text-gray-700 group-hover:text-primary-600">Departments</span>
-                    </a>
-                    <a href="{{ route('index.cdpert') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
-                        <i class="fas fa-book w-5 text-gray-400 group-hover:text-primary-600"></i>
-                        <span class="text-gray-700 group-hover:text-primary-600">Courses</span>
-                    </a>
-                    <a href="{{ route('campuses.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
-                        <i class="fas fa-university w-5 text-gray-400 group-hover:text-primary-600"></i>
-                        <span class="text-gray-700 group-hover:text-primary-600">Campuses</span>
-                    </a>
-                    <a href="{{ route('teams.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
-                        <i class="fas fa-users w-5 text-gray-400 group-hover:text-primary-600"></i>
-                        <span class="text-gray-700 group-hover:text-primary-600">Team Management</span>
-                    </a>
-                    <a href="{{ route('partners.show') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
-                        <i class="fas fa-handshake w-5 text-gray-400 group-hover:text-primary-600"></i>
-                        <span class="text-gray-700 group-hover:text-primary-600">Partners</span>
-                    </a>
+                    <!-- Administration Section -->
+<div class="pt-4 pb-2">
+    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4">Administration</p>
+</div>
+<a href="{{ route('index.departments') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
+    <i class="fas fa-building w-5 text-gray-400 group-hover:text-primary-600"></i>
+    <span class="text-gray-700 group-hover:text-primary-600">Departments</span>
+</a>
+<a href="{{ route('index.cdpert') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
+    <i class="fas fa-book w-5 text-gray-400 group-hover:text-primary-600"></i>
+    <span class="text-gray-700 group-hover:text-primary-600">Courses</span>
+</a>
+<a href="{{ route('campuses.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
+    <i class="fas fa-university w-5 text-gray-400 group-hover:text-primary-600"></i>
+    <span class="text-gray-700 group-hover:text-primary-600">Campuses</span>
+</a>
+<a href="{{ route('teams.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
+    <i class="fas fa-users w-5 text-gray-400 group-hover:text-primary-600"></i>
+    <span class="text-gray-700 group-hover:text-primary-600">Team Management</span>
+</a>
+<a href="{{ route('partners.show') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
+    <i class="fas fa-handshake w-5 text-gray-400 group-hover:text-primary-600"></i>
+    <span class="text-gray-700 group-hover:text-primary-600">Partners</span>
+</a>
+<!-- CONTACT MESSAGES LINK - ADD THIS -->
+<a href="{{ route('contact.messages.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
+    <i class="fas fa-envelope w-5 text-gray-400 group-hover:text-primary-600"></i>
+    <span class="text-gray-700 group-hover:text-primary-600">Contact Messages</span>
+    @php
+        $unreadCount = App\Models\Contact::where('is_read', false)->count();
+    @endphp
+    @if($unreadCount > 0)
+        <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
+    @endif
+</a>
                 </nav>
             </aside>
 
@@ -432,17 +444,20 @@
                     <a href="{{ route('hewitt_banners.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-bullseye w-5 text-gray-400"></i><span>Campaigns</span></a>
                     <a href="{{ route('tiktok-videos.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fab fa-tiktok w-5 text-gray-400"></i><span>Social Media</span></a>
 
-                    <div class="pt-4 pb-2"><p class="text-xs font-semibold text-gray-400 px-4">Administration</p></div>
-                    <a href="{{ route('index.departments') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-building w-5 text-gray-400"></i><span>Departments</span></a>
-                    <a href="{{ route('index.cdpert') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-book w-5 text-gray-400"></i><span>Courses</span></a>
-                    <a href="{{ route('campuses.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-university w-5 text-gray-400"></i><span>Campuses</span></a>
-                    <a href="{{ route('teams.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-users w-5 text-gray-400"></i><span>Team Management</span></a>
-                    <a href="{{ route('partners.show') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-handshake w-5 text-gray-400"></i><span>Partners</span></a>
-                <!-- Add this in the Administration section of your sidebar -->
-<a href="{{ route('contact.messages.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition group">
-    <i class="fas fa-envelope w-5 text-gray-400 group-hover:text-primary-600"></i>
-    <span class="text-gray-700 group-hover:text-primary-600">Contact Messages</span>
-    @if($unreadCount = App\Models\Contact::where('is_read', false)->count())
+                   <div class="pt-4 pb-2"><p class="text-xs font-semibold text-gray-400 px-4">Administration</p></div>
+<a href="{{ route('index.departments') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-building w-5 text-gray-400"></i><span>Departments</span></a>
+<a href="{{ route('index.cdpert') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-book w-5 text-gray-400"></i><span>Courses</span></a>
+<a href="{{ route('campuses.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-university w-5 text-gray-400"></i><span>Campuses</span></a>
+<a href="{{ route('teams.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-users w-5 text-gray-400"></i><span>Team Management</span></a>
+<a href="{{ route('partners.show') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition"><i class="fas fa-handshake w-5 text-gray-400"></i><span>Partners</span></a>
+<!-- CONTACT MESSAGES LINK - ADD THIS -->
+<a href="{{ route('contact.messages.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-primary-50 transition">
+    <i class="fas fa-envelope w-5 text-gray-400"></i>
+    <span>Contact Messages</span>
+    @php
+        $unreadCount = App\Models\Contact::where('is_read', false)->count();
+    @endphp
+    @if($unreadCount > 0)
         <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
     @endif
 </a>
