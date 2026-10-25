@@ -8,6 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Servers upgraded from the old code already have this table.
+        if (Schema::hasTable('tik_tok_vids')) {
+            return;
+        }
+
         Schema::create('tik_tok_vids', function (Blueprint $table) {
             $table->id();
             $table->string('video_url');

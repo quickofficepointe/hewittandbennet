@@ -8,6 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Servers upgraded from the old code already have this table.
+        if (Schema::hasTable('partners')) {
+            return;
+        }
+
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->string('name');

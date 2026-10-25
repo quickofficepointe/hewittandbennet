@@ -13,6 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
+        // Servers upgraded from the old code already have this table.
+        if (Schema::hasTable('password_resets')) {
+            return;
+        }
+
         Schema::create('password_resets', function (Blueprint $table) {
             $table->string('email')->index();
             $table->string('token');

@@ -70,7 +70,7 @@ class PublicWebsiteTest extends TestCase
         $admin = User::where('username', 'admin')->firstOrFail();
         $this->actingAs($admin)->get(route('portal.admin.contact-messages.index'))->assertOk()->assertSee('Amina Otieno');
         $this->actingAs($admin)->patch(route('portal.admin.contact-messages.read', $message))->assertRedirect();
-        $this->assertNotNull($message->fresh()->read_at);
+        $this->assertTrue($message->fresh()->is_read);
     }
 
     public function test_contact_form_validates_and_ignores_bots(): void

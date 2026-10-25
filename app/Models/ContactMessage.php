@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-/** An enquiry sent through the public contact form. */
+/** An enquiry sent through the public contact form (stored in the existing contacts table). */
 class ContactMessage extends Model
 {
     public const SUBJECTS = [
@@ -16,9 +16,17 @@ class ContactMessage extends Model
         'Campus Information',
         'General Enquiry',
         'Complaint',
+        'Other',
     ];
 
-    protected $fillable = ['name', 'email', 'phone', 'subject', 'message', 'read_at'];
+    protected $table = 'contacts';
 
-    protected $casts = ['read_at' => 'datetime'];
+    protected $fillable = ['name', 'email', 'phone', 'subject', 'body', 'is_read', 'read_at'];
+
+    protected $casts = ['is_read' => 'boolean', 'read_at' => 'datetime'];
+
+    public function markRead(bool $read = true): void
+    {
+        $this->update(['is_read' => $read, 'read_at' => $read ? now() : null]);
+    }
 }

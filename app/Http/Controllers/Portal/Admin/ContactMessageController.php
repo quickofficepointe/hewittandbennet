@@ -17,9 +17,9 @@ class ContactMessageController extends Controller
 
     public function markRead(ContactMessage $message)
     {
-        $message->update(['read_at' => $message->read_at ? null : now()]);
+        $message->markRead(! $message->is_read);
 
-        return back()->with('success', $message->read_at ? 'Marked as handled.' : 'Marked as new.');
+        return back()->with('success', $message->is_read ? 'Marked as handled.' : 'Marked as new.');
     }
 
     public function destroy(ContactMessage $message)

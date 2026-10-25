@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Servers upgraded from the old code already have this table.
+        if (Schema::hasTable('workabroads')) {
+            return;
+        }
+
         Schema::create('workabroads', function (Blueprint $table) {
             $table->id();
             $table->timestamps();

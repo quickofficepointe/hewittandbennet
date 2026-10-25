@@ -27,6 +27,8 @@ class ContactController extends Controller
             'subject' => ['required', Rule::in(ContactMessage::SUBJECTS)],
             'message' => 'required|string|max:5000',
         ]);
+        $data['body'] = $data['message'];
+        unset($data['message']);
 
         ContactMessage::create($data);
 

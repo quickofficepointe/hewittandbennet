@@ -8,12 +8,23 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Guarded: the live server may already have some of these columns.
         Schema::table('courses', function (Blueprint $table) {
-            $table->string('code')->nullable()->after('name');
-            $table->string('level')->nullable()->after('code'); // Certificate, Diploma, Short course...
-            $table->string('examining_body')->nullable()->after('level'); // TVETA, NITA, CDACC, KNEC
-            $table->unsignedTinyInteger('total_terms')->default(1)->after('duration');
-            $table->boolean('is_active')->default(true);
+            if (! Schema::hasColumn('courses', 'code')) {
+                $table->string('code')->nullable()->after('name');
+            }
+            if (! Schema::hasColumn('courses', 'level')) {
+                $table->string('level')->nullable()->after('name'); // Certificate, Diploma, Short course...
+            }
+            if (! Schema::hasColumn('courses', 'examining_body')) {
+                $table->string('examining_body')->nullable()->after('name'); // TVETA, NITA, CDACC, KNEC
+            }
+            if (! Schema::hasColumn('courses', 'total_terms')) {
+                $table->unsignedTinyInteger('total_terms')->default(1)->after('duration');
+            }
+            if (! Schema::hasColumn('courses', 'is_active')) {
+                $table->boolean('is_active')->default(true);
+            }
         });
 
         Schema::create('academic_terms', function (Blueprint $table) {
@@ -165,9 +176,11 @@ return new class extends Migration
             $table->unique(['online_exam_id', 'student_id']);
         });
 
-        Schema::table('courseapplications', function (Blueprint $table) {
-            $table->foreignId('student_id')->nullable()->constrained()->nullOnDelete();
-        });
+        if (! Schema::hasColumn('courseapplications', 'student_id')) {
+            Schema::table('courseapplications', function (Blueprint $table) {
+                $table->foreignId('student_id')->nullable()->constrained()->nullOnDelete();
+            });
+        }
     }
 
     public function down(): void
