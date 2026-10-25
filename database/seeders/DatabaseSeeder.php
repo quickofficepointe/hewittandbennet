@@ -2,21 +2,21 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * php artisan migrate:fresh --seed   -> setup + website content + demo data (local only)
+     * php artisan db:seed --class=SetupSeeder   -> only the essentials (production)
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call(SetupSeeder::class);
+        $this->call(LegacyContentSeeder::class);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        if (app()->environment('local', 'testing')) {
+            $this->call(DemoDataSeeder::class);
+        }
     }
 }

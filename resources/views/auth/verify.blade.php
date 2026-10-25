@@ -57,7 +57,7 @@
         <!-- Content Section -->
         <div class="text-gray-700 text-center">
             <div class="mb-6">
-                <svg class="w-16 h-16 text-indigo-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-16 h-16 text-brand-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
             </div>
@@ -72,7 +72,7 @@
             <!-- Resend Form -->
             <form method="POST" action="{{ route('verification.resend') }}">
                 @csrf
-                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition duration-300">
                     Resend Verification Email
                 </button>
             </form>
@@ -82,7 +82,7 @@
         <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
             <p class="text-xs text-gray-600 text-center">
                 Need help? Contact our
-                <a href="mailto:support@hbic.edu" class="text-indigo-600 hover:text-indigo-500 font-medium">support team</a>
+                <a href="mailto:support@hbic.edu" class="text-brand-600 hover:text-brand-500 font-medium">support team</a>
                 or check your spam folder.
             </p>
         </div>

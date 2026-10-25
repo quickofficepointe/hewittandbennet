@@ -67,17 +67,12 @@
                         </div>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full {{ $reviews->status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                            {{ ucfirst($reviews->status) }}
+                        <span class="px-2 py-1 text-xs rounded-full {{ $reviews->status ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                            {{ $reviews->status ? 'Approved' : 'Pending' }}
                         </span>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap">
                         <div class="flex space-x-2">
-                            <a href="{{ route('reviews.edit', $reviews->id) }}"
-                               class="text-primary hover:text-primary-dark transition"
-                               title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
                             <form action="{{ route('reviews.destroy', $reviews->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -88,9 +83,10 @@
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
-                            @if($reviews->status !== 'approved')
+                            @if(! $reviews->status)
                             <form action="{{ route('reviews.approve', $reviews->id) }}" method="POST" class="inline">
                                 @csrf
+                                @method('PATCH')
                                 <button type="submit"
                                         class="text-green-500 hover:text-green-700 transition"
                                         title="Approve">

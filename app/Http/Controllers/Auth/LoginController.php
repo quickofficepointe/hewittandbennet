@@ -3,28 +3,48 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request; // Import the Request class
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    protected function authenticated(Request $request, $user)
-    {
-        if (!$user->hasVerifiedEmail()) {
-            auth()->logout(); // Log out the user to prevent further access
-            return redirect('/login')
-                ->with('message', 'Please verify your email before logging in.');
-        }
+    protected $redirectTo = '/portal';
 
-        return redirect()->intended($this->redirectPath());
-    }
-
-    // Rest of your code...
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /** Lets people sign in with either their email address or username (e.g. admission number). */
+    protected function credentials(Request $request)
+    {
+        $login = $request->input($this->username());
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        return [$field => $login, 'password' => $request->input('password')];
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if (! $user->is_active) {
+            $this->guard()->logout();
+            $request->session()->invalidate();
+
+            throw ValidationException::withMessages([
+                $this->username() => 'Your account has been deactivated. Please contact the administrator.',
+            ]);
+        }
+
+        $user->forceFill(['last_login_at' => now()])->save();
+
+        return redirect()->intended(route('portal.dashboard'));
+    }
+
+    protected function loggedOut(Request $request)
+    {
+        return redirect()->route('login');
     }
 }

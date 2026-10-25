@@ -18,7 +18,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('role')->default(2); // Default role value for students
+            $table->unsignedTinyInteger('role')->default(2); // 0 director, 1 admin, 2 student, 3 trainer, 4 hr, 5 accountant
+            $table->string('phone')->nullable();
+            $table->string('avatar')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamp('last_login_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

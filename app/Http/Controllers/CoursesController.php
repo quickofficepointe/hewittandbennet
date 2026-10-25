@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Campus;
 use App\Models\courses;
 use App\Models\department;
 use Illuminate\Http\Request;
@@ -14,10 +15,18 @@ class CoursesController extends Controller
      */
     public function showSingleCourse($slug)
 {
-    $course = courses::where('slug', $slug)->firstOrFail();
-    $banners = hewitt_banners::where('status', true)->get();
+    $course = courses::with('department')->where('slug', $slug)->firstOrFail();
+    $relatedCourses = courses::where('department_id', $course->department_id)
+        ->whereKeyNot($course->id)
+        ->take(3)
+        ->get();
 
-    return view('frontendviews.courses.single', compact('course', 'banners'));
+    return view('frontendviews.courses.single', [
+        'course' => $course,
+        'relatedCourses' => $relatedCourses,
+        'coursese' => courses::orderBy('name')->get(),
+        'campuses' => Campus::orderBy('name')->get(),
+    ]);
 }
 
 
@@ -35,11 +44,17 @@ class CoursesController extends Controller
     }
 
 
-    public function allcourses() {
-        $banners = hewitt_banners::where('status', true)->get();
-        $coursese = courses::all();
-        $departments = department::all();
-        return view('frontendviews.courses.index', compact('coursese', 'departments', 'banners'));
+    public function allcourses(Request $request) {
+        $coursese = courses::with('department')
+            ->when($request->filled('search'), fn ($q) => $q->where(fn ($q) => $q
+                ->where('name', 'like', "%{$request->search}%")
+                ->orWhere('course_description', 'like', "%{$request->search}%")))
+            ->when($request->filled('department'), fn ($q) => $q->where('department_id', $request->department))
+            ->get();
+        $departments = department::orderBy('name')->get();
+        $campuses = Campus::orderBy('name')->get();
+
+        return view('frontendviews.courses.index', compact('coursese', 'departments', 'campuses'));
     }
     public function fees(){
         $courses = courses::all();

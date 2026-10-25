@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Courseapplication extends Model
+class courseapplication extends Model
 {
     use HasFactory;
 
@@ -20,7 +20,8 @@ class Courseapplication extends Model
         'startMonth',
         'startYear',
         'modeOfLearning',
-        'status'
+        'status',
+        'student_id',
     ];
 
     /**
@@ -34,6 +35,11 @@ class Courseapplication extends Model
     /**
      * Get the campus associated with the application.
      */
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(Student::class);
+    }
+
     public function campus(): BelongsTo
     {
         return $this->belongsTo(Campus::class);

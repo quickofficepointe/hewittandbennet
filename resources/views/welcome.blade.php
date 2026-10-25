@@ -1,811 +1,501 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hewitt And Bennet International College</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1E3A8A',   // blue-900
-                        secondary: '#DC2626', // red-600
-                        light: '#F8FAFC'
-                    },
-                    animation: {
-                        'scroll': 'scroll 30s linear infinite',
-                    },
-                    keyframes: {
-                        scroll: {
-                            '0%': { transform: 'translateX(0)' },
-                            '100%': { transform: 'translateX(-50%)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Alpine.js for interactivity -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="Assets/images/favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="Assets/images/favicon_io/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="Assets/images/favicon_io/favicon-16x16.png">
-    <link rel="manifest" href="Assets/images/favicon_io/site.webmanifest">
-
-    <style>
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .break-inside-avoid-column {
-            break-inside: avoid;
-        }
-
-        .chatbot-transition {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .message {
-            padding: 8px 12px;
-            border-radius: 10px;
-            max-width: 80%;
-            margin-bottom: 8px;
-            word-wrap: break-word;
-        }
-
-        .message.user {
-            color: #1E40AF;
-            margin-left: auto;
-            text-align: right;
-        }
-
-        .message.bot {
-            background-color: #F3F4F6;
-            color: #4B5563;
-            margin-right: auto;
-            text-align: left;
-        }
-    </style>
-</head>
-<body class="bg-white text-primary">
-    <!-- Header & Navigation -->
-    <header x-data="{ mobileOpen: false }" class="sticky top-0 z-50 bg-white shadow-sm">
-        <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <!-- Logo and Brand -->
-            <div class="flex items-center space-x-3">
-                <img src="{{asset ('assets/img/logo_nobg.png') }}" alt="Hewitt and Bennet Logo" class="h-12 sm:h-14">
-                <span class="text-xl sm:text-2xl font-bold leading-tight">
-                    Hewitt And Bennet<br class="hidden sm:block" />International College
-                </span>
-            </div>
-
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center space-x-8">
-                <div class="flex space-x-6">
-                    <a href="/" class="text-lg text-primary hover:text-secondary transition-colors">Home</a>
-                    <a href="#about" class="text-lg text-primary hover:text-secondary transition-colors">About Us</a>
-                    <a href="{{ route('courses.all') }}" class="text-lg text-primary hover:text-secondary transition-colors">Courses</a>
-                    <a href="{{ route('registration.create') }}" class="text-lg text-primary hover:text-secondary transition-colors">Admissions</a>
-                    <a href="#campus" class="text-lg text-primary hover:text-secondary transition-colors">Campus</a>
-                    <a href="{{ route('news.event') }}" class="text-lg text-primary hover:text-secondary transition-colors">News</a>
-                    <a href="#contact" class="text-lg text-primary hover:text-secondary transition-colors">Contact Us</a>
-                </div>
-
-                <div class="flex space-x-4 ml-6">
-                    <a href="#enroll" class="bg-secondary text-white px-5 py-2.5 rounded-lg hover:bg-red-700 text-lg transition-colors">Enroll Now</a>
-                    <a href="{{ route('courses.all') }}" class="border border-primary text-primary px-5 py-2.5 rounded-lg hover:bg-blue-50 text-lg transition-colors">View Courses</a>
-                </div>
-            </div>
-
-            <!-- Mobile Toggle -->
-            <button @click="mobileOpen = true" class="md:hidden text-primary">
-                <i class="fa-solid fa-bars text-2xl"></i>
-            </button>
-        </nav>
-
-        <!-- Mobile Navigation -->
-        <div x-show="mobileOpen" x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 -translate-y-4"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 translate-y-0"
-             x-transition:leave-end="opacity-0 -translate-y-4"
-             class="md:hidden fixed inset-0 bg-white z-40 overflow-y-auto">
-            <div class="px-6 py-4">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex items-center space-x-3">
-                        <img src="{{asset ('assets/img/logo_nobg.png') }}" alt="Hewitt and Bennet Logo" class="h-10">
-                        <span class="text-base font-semibold text-primary leading-tight">
-                            Hewitt And Bennet<br>International College
-                        </span>
-                    </div>
-                    <button @click="mobileOpen = false" class="text-primary">
-                        <i class="fa-solid fa-xmark text-2xl"></i>
-                    </button>
-                </div>
-                <div class="flex flex-col space-y-5 text-center py-6">
-                    <a href="/" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Home</a>
-                    <a href="#about" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">About Us</a>
-                    <a href="{{ route('courses.all') }}" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Courses</a>
-                    <a href="#admissions" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Admissions</a>
-                    <a href="#campus" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Campus</a>
-                    <a href="#contact" @click="mobileOpen = false" class="text-lg text-primary hover:text-secondary py-2">Contact Us</a>
-
-                    <div class="pt-4 border-t border-gray-200 space-y-4">
-                        <a href="#enroll" @click="mobileOpen = false" class="block bg-secondary text-white py-3 rounded-lg hover:bg-red-700 text-lg">Enroll Now</a>
-                        <a href="{{ route('courses.all') }}" @click="mobileOpen = false" class="block border border-primary text-primary py-3 rounded-lg hover:bg-blue-50 text-lg">View Courses</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero Carousel -->
-    <section x-data="carousel()" id="hero-carousel" class="relative h-screen flex items-center justify-center text-white overflow-hidden">
-        <div class="absolute inset-0 w-full h-full">
-            @foreach($banners as $index => $banner)
-            <div x-show="currentIndex === {{ $index }}" x-transition:enter="transition ease-out duration-700"
-                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-700"
-                 x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                 class="absolute inset-0 w-full h-full">
-                <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->title ?? 'Banner Image' }}" class="object-cover w-full h-full">
-                <div class="absolute inset-0 bg-black opacity-30 z-10"></div>
-            </div>
-            @endforeach
-        </div>
-
-        <div class="relative z-20 text-center px-4 max-w-4xl mx-auto">
-            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 text-white drop-shadow-lg">
-                <span>Training for</span> <span>Global</span> Assignments
-            </h1>
-            <p class="text-xl md:text-2xl mb-8 text-white text-opacity-90 drop-shadow-md">
-                Empowering students to excel globally through industry-focused training and internationally recognized programs.
-            </p>
-            <div class="flex flex-col items-center space-y-4">
-                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#enroll" class="bg-secondary text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-700 transition-colors shadow-lg">Enroll Now</a>
-                    <a href="{{ route('courses.all') }}" class="border-2 border-white text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-white hover:text-primary transition-colors shadow-lg">View Courses</a>
-                </div>
-                <a href="#abroad-opportunities" class="bg-secondary text-white px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-700 transition-colors shadow-lg">Abroad Opportunities</a>
-            </div>
-        </div>
-
-        <button @click="prev()" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full z-30">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
-        <button @click="next()" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full z-30">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-
-        <div class="absolute bottom-8 z-30 flex space-x-2">
-            @foreach($banners as $index => $banner)
-            <span @click="goTo({{ $index }})" :class="{'bg-white bg-opacity-80': currentIndex === {{ $index }}, 'bg-white bg-opacity-50': currentIndex !== {{ $index }}}" class="dot w-3 h-3 rounded-full cursor-pointer hover:bg-opacity-80 transition-colors duration-300"></span>
-            @endforeach
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl md:text-5xl font-bold text-primary text-center mb-12">About Our College</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-10 max-w-6xl mx-auto items-stretch">
-                <!-- Left: About Text -->
-                <div class="bg-white p-8 rounded-lg shadow-xl transform hover:scale-105 transition-transform duration-300 min-h-full flex flex-col justify-center">
-                    <p class="text-gray-700 text-lg leading-relaxed mb-6">
-                        At Hewitt and Bennet International College, we're dedicated to delivering industry-focused training that empowers students for global careers. Our accreditations and partnerships highlight our commitment to high-quality, internationally recognized education.
-                    </p>
-                    <p class="text-gray-700 text-lg leading-relaxed">
-                        Our curriculum prepares students for success, with programs tailored to meet today's job market demands. We also offer visa application support to help graduates transition smoothly into their professional journeys worldwide.
-                    </p>
-                </div>
-
-                <!-- Right: Vision, Mission, Values -->
-                <div class="relative flex flex-col gap-8">
-                    <div class="absolute inset-y-0 left-1/2 transform -translate-x-1/2 w-px bg-gray-300 z-0 hidden sm:block"></div>
-
-                    <!-- Vision -->
-                    <div class="bg-white p-8 rounded-lg shadow-xl border-t-4 border-blue-600 transform hover:-translate-y-2 transition-transform duration-300 relative z-10 pl-8 pr-4">
-                        <h3 class="text-3xl font-bold text-blue-800 mb-4">Our Vision</h3>
-                        <p class="text-gray-700 leading-relaxed">
-                            To become Africa's premier training institution, aligning student skills with global job market needs.
-                        </p>
-                    </div>
-
-                    <!-- Mission & Values -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 relative z-10">
-                        <!-- Mission -->
-                        <div class="bg-white p-8 rounded-lg shadow-xl border-t-4 border-secondary transform hover:-translate-y-2 transition-transform duration-300 pl-8 pr-4">
-                            <h3 class="text-3xl font-bold text-secondary mb-4">Our Mission</h3>
-                            <p class="text-gray-700 leading-relaxed">
-                                To deliver globally in-demand training programs that equip students for success.
-                            </p>
-                        </div>
-
-                        <!-- Values -->
-                        <div class="bg-white p-8 rounded-lg shadow-xl border-t-4 border-blue-600 transform hover:-translate-y-2 transition-transform duration-300 pl-8 pr-4">
-                            <h3 class="text-3xl font-bold text-blue-800 mb-4">Our Values</h3>
-                            <ul class="list-disc list-inside text-gray-700 leading-relaxed space-y-2">
-                                <li>Excellence and Integrity</li>
-                                <li>Service and Self-determination</li>
-                                <li>Global Citizenship</li>
-                                <li>Compassion and Respect</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CTA -->
-            <div class="text-center mt-16">
-                <p class="text-2xl font-semibold text-gray-800 mb-6">Ready to start your global journey?</p>
-                <a href="{{ route('courses.all') }}" class="bg-blue-700 text-white px-10 py-4 rounded-full text-xl font-bold hover:bg-blue-800 transition-colors shadow-lg">
-                    Explore Programs
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Leadership Team -->
-    <section class="px-6 py-12 bg-gray-100" id="management">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold text-center text-primary mb-10">Leadership Team</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                @foreach($teams as $member)
-                <div class="relative rounded-xl overflow-hidden shadow-md h-64 md:h-80 group">
-                    <img src="{{ asset('storage/' . $member->image) }}" alt="{{ $member->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300"></div>
-                    <div class="absolute top-0 left-0 md:top-auto md:bottom-4 md:left-1/2 md:transform md:-translate-x-1/2">
-                        <div class="bg-primary text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md text-left md:text-center">
-                            {{ $member->name }}<br />
-                            <span class="text-xs font-normal">{{ $member->description }}</span>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <!-- Courses section -->
-    <section class="px-6 py-16 bg-gradient-to-br from-blue-50 to-blue-100" id="courses">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-extrabold text-primary mb-4">Our Featured Courses</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Discover programs designed to launch your career with industry-relevant skills</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach($coursese as $course)
-                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col h-full">
-                    <!-- Course Image -->
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}"
-                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                        <span class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Featured</span>
-                    </div>
-
-                    <!-- Course Content -->
-                    <div class="p-6 flex-grow">
-                        <!-- Course Name & Department -->
-                        <div class="mb-3">
-                            <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">
-                                {{ $course->department->name ?? 'Professional' }}
-                            </span>
-                        </div>
-
-                        <!-- Course Title -->
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight">
-                            {{ $course->name }}
-                        </h3>
-
-                        <!-- Short Description -->
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">
-                            {{ $course->short_description ?? Str::limit($course->course_description, 120) }}
-                        </p>
-
-                        <!-- Key Features -->
-                        <div class="mt-4 pt-4 border-t border-gray-100">
-                            <div class="flex flex-wrap gap-3 text-xs">
-                                <div class="flex items-center text-blue-600">
-                                    <i class="fa-solid fa-check-circle mr-1"></i>
-                                    Accredited
-                                </div>
-                                <div class="flex items-center text-green-600">
-                                    <i class="fa-solid fa-globe mr-1"></i>
-                                    Global
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="px-6 pb-6 mt-auto">
-                        <div class="flex gap-3">
-                            <a href="{{ route('course.single', $course->slug) }}"
-                               class="flex-1 text-center bg-white border border-blue-600 text-blue-600 py-2 px-4 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-                                Learn More
-                            </a>
-                            <a href="#enroll-modal"
-                               class="flex-1 text-center bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors apply-btn"
-                               data-course="{{ $course->id }}">
-                                Apply
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-
-            <!-- View All Button -->
-            <div class="text-center mt-12">
-                <a href="{{ route('courses.all') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                    View All Courses
-                    <i class="fa-solid fa-arrow-right ml-2"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Apply Now Modal -->
-    <div x-data="{ open: false, selectedCourse: '' }"
-         x-show="open"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-         style="display: none;">
-
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-auto overflow-y-auto max-h-[90vh] relative">
-            <!-- Close Button -->
-            <button @click="open = false" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
-
-            <form id="enrollment-form" class="p-8 space-y-6" action="{{ route('courseregistration.store') }}" method="POST">
-                @csrf
-                <h2 class="text-2xl font-bold text-primary mb-6">Course Application Form</h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Personal Information -->
-                    <div class="md:col-span-2">
-                        <h3 class="text-lg font-semibold text-blue-800 mb-4 border-b pb-2">Personal Information</h3>
-                    </div>
-
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <input type="text" name="name" id="name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                        <input type="email" name="email" id="email" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-
-                    <div>
-                        <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                        <input type="text" name="location" id="location" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-
-                    <div>
-                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input type="tel" name="phoneNumber" id="phoneNumber" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                    </div>
-
-                    <!-- Course Information -->
-                    <div class="md:col-span-2">
-                        <h3 class="text-lg font-semibold text-blue-800 mb-4 border-b pb-2">Course Information</h3>
-                    </div>
-
-                    <div>
-                        <label for="course_id" class="block text-sm font-medium text-gray-700">Select Course</label>
-                        <select name="course_id" id="course_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Course --</option>
-                            @foreach($coursese as $course)
-                            <option value="{{ $course->id }}">{{ $course->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="campus_id" class="block text-sm font-medium text-gray-700">Select Campus</label>
-                        <select name="campus_id" id="campus_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Campus --</option>
-                            @foreach($campuses as $campus)
-                            <option value="{{ $campus->id }}">{{ $campus->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="startMonth" class="block text-sm font-medium text-gray-700">Start Month</label>
-                        <select name="startMonth" id="startMonth" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Month --</option>
-                            <option value="January">January</option>
-                            <option value="February">February</option>
-                            <option value="March">March</option>
-                            <option value="April">April</option>
-                            <option value="May">May</option>
-                            <option value="June">June</option>
-                            <option value="July">July</option>
-                            <option value="August">August</option>
-                            <option value="September">September</option>
-                            <option value="October">October</option>
-                            <option value="November">November</option>
-                            <option value="December">December</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="startYear" class="block text-sm font-medium text-gray-700">Start Year</label>
-                        <select name="startYear" id="startYear" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Year --</option>
-                            @for($year = date('Y'); $year <= date('Y') + 5; $year++)
-                            <option value="{{ $year }}">{{ $year }}</option>
-                            @endfor
-                        </select>
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="modeOfLearning" class="block text-sm font-medium text-gray-700">Mode of Learning</label>
-                        <select name="modeOfLearning" id="modeOfLearning" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                            <option value="">-- Select Mode --</option>
-                            <option value="On-Campus">On-Campus</option>
-                            <option value="Online">Online</option>
-                            <option value="Hybrid">Hybrid</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="flex justify-end mt-8">
-                    <button type="button" @click="open = false" class="mr-4 bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-400 transition">Cancel</button>
-                    <button type="submit" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-800 transition">Submit Application</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Partners Section -->
-    <section class="py-12 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-primary mb-8">Our Valued Partners</h2>
-
-            <div class="partners-slider relative overflow-hidden h-32">
-                <div class="partners-track flex absolute left-0 top-0 h-full items-center animate-scroll">
-                    @foreach($partners as $partner)
-                    <div class="partner-slide mx-8 flex-shrink-0">
-                        <img src="{{ asset('storage/' . $partner->logo) }}"
-                             alt="{{ $partner->name }}"
-                             class="h-20 object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
-                             title="{{ $partner->name }}">
-                    </div>
-                    @endforeach
-
-                    <!-- Duplicate for seamless looping -->
-                    @foreach($partners as $partner)
-                    <div class="partner-slide mx-8 flex-shrink-0">
-                        <img src="{{ asset('storage/' . $partner->logo) }}"
-                             alt="{{ $partner->name }}"
-                             class="h-20 object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
-                             title="{{ $partner->name }}">
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Student Life -->
-    <section id="student-life" class="py-16 bg-gray-100">
-        <div class="container mx-auto px-4">
-            <h2 class="text-4xl md:text-5xl font-bold text-primary text-center mb-12">Student Life</h2>
-
-            <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 max-w-7xl mx-auto">
-                @foreach($galleryItems as $item)
-                @if($item->file_type === 'image')
-                <div class="mb-6 break-inside-avoid-column">
-                    <img src="{{ asset('storage/' . $item->file_path) }}" alt="{{ $item->title }}" class="w-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 object-cover">
-                </div>
-                @endif
-                @endforeach
-            </div>
-
-            <div class="text-center mt-12">
-                <a href="{{ route('student.gallery') }}" class="inline-block bg-blue-700 text-white px-8 py-4 rounded-full text-xl font-bold hover:bg-blue-800 transition-colors shadow-lg">
-                    View Full Gallery
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Campuses -->
-    <section class="py-16 bg-white" id="campus">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-primary text-center mb-8">Our Campuses</h2>
-            <p class="text-gray-700 text-center mb-12">Explore our campuses located in Nairobi CBD, Buruburu, and Thika.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                @foreach($campuses as $campus)
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                    @if($campus->banner_image)
-                    <img src="{{ asset('storage/' . $campus->banner_image) }}" alt="{{ $campus->name }}" class="w-full h-40 object-cover rounded mb-4">
-                    @endif
-                    <h3 class="text-xl font-semibold text-primary mb-4">{{ $campus->name }}</h3>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="py-16 bg-gray-50" id="contact">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Contact Us</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">We'd love to hear from you! Whether you have questions, need assistance, or are interested in our programs, reach out today.</p>
-            </div>
-
-            <div class="flex flex-col lg:flex-row gap-12">
-                <div class="lg:w-1/2">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d510528.70323917136!2d36.278633167492444!3d-1.4698621662224913!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1128783fffff%3A0x34ca92a42c32810!2sHewitt%20and%20Bennet%20International%20College!5e0!3m2!1sen!2ske!4v1694245829727!5m2!1sen!2ske" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-
-                    <div class="grid md:grid-cols-2 gap-6 mt-8">
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <div class="flex items-center mb-4">
-                                <div class="bg-primary/10 p-3 rounded-full mr-4">
-                                    <i class="fas fa-map-marker-alt text-primary text-xl"></i>
-                                </div>
-                                <h3 class="font-semibold text-gray-800">Our Locations</h3>
-                            </div>
-                            <ul class="text-gray-600 space-y-2">
-                                <li>Nairobi CBD</li>
-                                <li>Buruburu</li>
-                                <li>Thika</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-white rounded-lg shadow-md p-6">
-                            <div class="flex items-center mb-4">
-                                <div class="bg-primary/10 p-3 rounded-full mr-4">
-                                    <i class="fas fa-phone-alt text-primary text-xl"></i>
-                                </div>
-                                <h3 class="font-semibold text-gray-800">Contact Numbers</h3>
-                            </div>
-                            <ul class="text-gray-600 space-y-2">
-                                <li>+254 740 197 796</li>
-                                <li>+254 792 168 754</li>
-                                <li>+254 700 207 013</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lg:w-1/2">
-                    <div class="bg-white rounded-lg shadow-lg p-8">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
-                        <form action="" method="POST" class="space-y-6">
-                            @csrf
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="name" class="block text-gray-700 font-medium mb-2">Your Name</label>
-                                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                                </div>
-                                <div>
-                                    <label for="email" class="block text-gray-700 font-medium mb-2">Your Email</label>
-                                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label for="subject" class="block text-gray-700 font-medium mb-2">Subject</label>
-                                <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                            </div>
-
-                            <div>
-                                <label for="message" class="block text-gray-700 font-medium mb-2">Your Message</label>
-                                <textarea id="message" name="body" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" required></textarea>
-                            </div>
-
-                            <button type="submit" class="w-full bg-primary text-white py-3 px-6 rounded-lg hover:bg-secondary transition font-medium">
-                                Send Message
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Chatbot -->
-    <div x-data="{ chatbotOpen: false }" class="fixed bottom-8 right-8 z-50">
-        <button @click="chatbotOpen = !chatbotOpen" class="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
-            <i class="fa-solid fa-comments text-xl"></i>
-        </button>
-        <div x-show="chatbotOpen" x-transition:enter="chatbot-transition"
-             x-transition:enter-start="opacity-0 transform translate-y-4"
-             x-transition:enter-end="opacity-100 transform translate-y-0"
-             x-transition:leave="chatbot-transition"
-             x-transition:leave-start="opacity-100 transform translate-y-0"
-             x-transition:leave-end="opacity-0 transform translate-y-4"
-             class="absolute bottom-full right-0 w-80 h-96 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col"
-             style="display: none;">
-            <div class="p-4 flex justify-between items-center border-b border-gray-200 bg-blue-600 text-white rounded-t-lg">
-                <h3 class="font-semibold">Hewitt & Bennet Chat</h3>
-                <button @click="chatbotOpen = false" class="text-white hover:text-gray-200">&times;</button>
-            </div>
-            <div id="chatbot-messages" class="p-4 overflow-y-auto flex-grow">
-                <div class="mb-2 text-sm text-gray-600 self-start">
-                    Hello! How can I assist you with registration today?
-                </div>
-            </div>
-            <div class="p-4 border-t border-gray-200 flex items-center">
-                <input type="text" id="chatbot-input" placeholder="Type your message..." class="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button id="chatbot-send" class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Send</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-primary text-white py-12">
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="col-span-1 md:col-span-1">
-                <div class="flex items-center space-x-2 mb-4">
-                    <img src="{{asset ('assets/img/logo_nobg.png') }}" alt="Hewitt and Bennet Logo" class="h-10">
-                    <span class="text-xl font-bold leading-tight">Hewitt And Bennet<br>International College</span>
-                </div>
-                <p class="text-gray-300 text-sm">
-                    Empowering students for global careers through industry-focused and internationally recognized education.
+@extends('layouts.welcomelayout')
+
+@php
+    use Illuminate\Support\Str;
+
+    $college = config('college');
+    // Tuition is blank for some courses; then only the registration fee is known.
+    $feeLabel = fn ($course) => (float) $course->school_fees > 0
+        ? 'KES '.number_format((float) $course->registration_fees + (float) $course->school_fees + (float) $course->school_uniform_fee)
+        : ((float) $course->registration_fees > 0 ? 'Registration KES '.number_format((float) $course->registration_fees) : 'Contact us');
+    $featured = [
+        ['Caregiving', '4–6 Months', 'fa-hand-holding-medical', 'caregiv'],
+        ['Emergency Medical Technician', '12–24 Months', 'fa-truck-medical', 'emergency'],
+        ['Medical Imaging', '12 Months', 'fa-x-ray', 'imaging'],
+        ['Mortuary Science', '12 Months', 'fa-microscope', 'mortuary'],
+        ['German Language', '3 Months', 'fa-language', 'german'],
+        ['Cabin Crew', '6–9 Months', 'fa-plane-departure', 'cabin'],
+    ];
+    $whyUs = [
+        ['fa-certificate', 'Accredited Programs', 'TVETA, NITA & CDACC approved'],
+        ['fa-user-tie', 'Expert Trainers', 'Industry professionals'],
+        ['fa-location-dot', count($college['campuses']).' Campuses', 'Across Nairobi & environs'],
+        ['fa-earth-europe', 'Global Placement', 'Study & work abroad'],
+        ['fa-hand-holding-heart', 'Practical Training', 'Hands-on skills labs'],
+        ['fa-briefcase', 'Career Support', 'Placement & guidance'],
+    ];
+    $steps = [
+        ['Choose Your Course', 'Browse our programs and pick the one that fits your goals.'],
+        ['Apply Online', 'Complete the application form online or at any campus.'],
+        ['Submit Documents', 'Provide your academic and identification documents.'],
+        ['Pay Fees', 'Pay registration and course fees via M-Pesa or bank.'],
+        ['Get Admitted', 'Receive your admission letter and portal login, then report.'],
+    ];
+    $fallbackGallery = ['gallery-6', 'gallery-5', 'gallery-hero', 'gallery-caregiving', 'gallery-3', 'gallery-1', 'gallery-4', 'gallery-2'];
+@endphp
+
+@section('content')
+
+{{-- ===== HERO ===== --}}
+<section class="relative bg-hbNavy overflow-hidden">
+    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,#2F55A4_0,transparent_45%),radial-gradient(circle_at_90%_80%,#E31E24_0,transparent_35%)]" aria-hidden="true"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center min-h-[460px] py-12 md:py-0">
+            <div class="text-white">
+                <p class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-hbGold mb-4">
+                    <i class="fa-solid fa-award"></i> {{ implode(' · ', $college['accreditations']) }} Accredited
                 </p>
+                <h1 class="font-serif text-4xl md:text-5xl font-black leading-tight">
+                    Empowering Students<br> for <span class="text-hbGold">Global Careers</span>
+                </h1>
+                <p class="mt-5 text-lg text-white/85 max-w-xl">
+                    Kenya's leading TVET college in Healthcare, Hospitality and Languages, with structured pathways to work and study abroad. Start your journey today.
+                </p>
+                <div class="mt-8 flex flex-wrap gap-4">
+                    <a href="{{ route('registration.create') }}" class="bg-hbRed text-white px-8 py-3.5 text-sm font-black uppercase rounded-md hover:bg-red-700 shadow-lg shadow-black/20 transition">Apply Now</a>
+                    <a href="{{ route('courses.all') }}" class="bg-white text-hbNavy px-8 py-3.5 text-sm font-black uppercase rounded-md hover:bg-gray-100 transition">View All Courses</a>
+                </div>
+                <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/70">
+                    <span><i class="fa-solid fa-calendar-check text-hbGold mr-2"></i>Monthly intakes</span>
+                    <span><i class="fa-solid fa-laptop text-hbGold mr-2"></i>On-campus, online &amp; hybrid</span>
+                </div>
             </div>
-
-            <div>
-                <h3 class="text-xl font-semibold mb-4 text-secondary">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li><a href="/" class="text-gray-300 hover:text-white transition-colors">Home</a></li>
-                    <li><a href="#about" class="text-gray-300 hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="#admissions" class="text-gray-300 hover:text-white transition-colors">Admissions</a></li>
-                    <li><a href="#student-life" class="text-gray-300 hover:text-white transition-colors">Campus Life</a></li>
-                    <li><a href="#contact" class="text-gray-300 hover:text-white transition-colors">Contact Us</a></li>
-                </ul>
+            <div class="flex justify-center md:justify-end">
+                <img src="{{ asset('images/hero-students.webp') }}" alt="Hewitt & Bennet health sciences students in a practical class"
+                     class="w-full max-w-md h-auto rounded-2xl bg-white shadow-2xl" width="900" height="600" fetchpriority="high">
             </div>
+        </div>
+    </div>
+</section>
 
+{{-- ===== STATS ===== --}}
+<section class="bg-hbRed text-white py-8" aria-label="College in numbers">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        @foreach ($college['stats'] as [$value, $label])
             <div>
-                <h3 class="text-xl font-semibold mb-4 text-secondary">Programs & Opportunities</h3>
-                <ul class="space-y-2">
-                    <li><a href="{{ route('courses.all') }}" class="text-gray-300 hover:text-white transition-colors">View All Courses</a></li>
-                    <li><a href="#enroll" class="text-gray-300 hover:text-white transition-colors">Enroll Now</a></li>
-                    <li><a href="{{ route('workabroad.index') }}" class="text-gray-300 hover:text-white transition-colors">Study Abroad</a></li>
-                    <li><a href="{{ route('workabroad.index') }}" class="text-gray-300 hover:text-white transition-colors">Work Abroad</a></li>
-                </ul>
+                <div class="text-3xl md:text-4xl font-black">{{ $value }}</div>
+                <div class="text-sm text-white/85 mt-1">{{ $label }}</div>
             </div>
+        @endforeach
+    </div>
+</section>
 
+{{-- ===== FEATURED COURSES ===== --}}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <p class="text-center text-xs font-bold uppercase tracking-[0.2em] text-hbRed">Programs</p>
+        <h2 class="text-center text-2xl md:text-3xl font-black text-hbNavy uppercase mt-2">Featured Courses</h2>
+        <p class="text-center text-gray-500 text-sm mt-2 mb-10">Accredited programs designed for in-demand careers locally and globally</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            @foreach ($featured as [$title, $duration, $icon, $keyword])
+                @php $match = $coursese->first(fn ($c) => Str::contains(Str::lower($c->name), $keyword)); @endphp
+                <a href="{{ $match ? route('course.single', $match->slug) : route('courses.all') }}"
+                   class="group border border-gray-200 rounded-xl p-5 text-center hover:shadow-xl hover:-translate-y-1 hover:border-hbNavy/30 transition">
+                    <span class="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-50 text-hbNavy flex items-center justify-center text-2xl group-hover:bg-hbNavy group-hover:text-white transition">
+                        <i class="fa-solid {{ $icon }}"></i>
+                    </span>
+                    <h3 class="text-hbNavy text-xs font-black uppercase leading-tight">{{ $title }}</h3>
+                    <p class="text-xs mt-2 text-gray-500">{{ $duration }}</p>
+                </a>
+            @endforeach
+        </div>
+        <div class="text-center mt-10">
+            <a href="{{ route('courses.all') }}" class="bg-hbRed text-white px-8 py-3 text-sm font-black uppercase rounded-md hover:bg-red-700 transition inline-block">See All Courses &amp; Fees</a>
+        </div>
+    </div>
+</section>
+
+{{-- ===== WHY CHOOSE US ===== --}}
+<section class="bg-hbNavy text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 class="text-center text-2xl md:text-3xl font-black uppercase mb-10">Why Choose Hewitt &amp; Bennet</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
+            @foreach ($whyUs as [$icon, $title, $text])
+                <div class="bg-white/5 ring-1 ring-white/10 rounded-xl p-5 hover:bg-white/10 transition">
+                    <i class="fa-solid {{ $icon }} text-3xl text-hbGold mb-3"></i>
+                    <h3 class="text-xs font-black uppercase">{{ $title }}</h3>
+                    <p class="text-xs text-white/70 mt-2">{{ $text }}</p>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- ===== STUDY & WORK ABROAD + TESTIMONIALS ===== --}}
+<section id="work-abroad" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 items-start">
+        <div>
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-hbRed">International Pathways</p>
+            <h2 class="text-2xl font-black text-hbNavy uppercase mt-2 mb-5">Study &amp; Work Abroad</h2>
+            <p class="text-gray-600 mb-6">We partner with employers and institutions in Germany and across Europe to place qualified graduates in healthcare careers, with support at every step.</p>
+            <ul class="space-y-3">
+                @foreach ([
+                    'Germany Caregiving Program – high demand, competitive salaries',
+                    'Full visa processing and documentation support',
+                    'German language training (A1–B2 levels)',
+                    'Pre-departure orientation and cultural training',
+                    'Ongoing support for graduates already in Germany',
+                ] as $point)
+                    <li class="flex items-start gap-3 text-gray-700"><i class="fa-solid fa-circle-check text-hbRed mt-1"></i><span>{{ $point }}</span></li>
+                @endforeach
+            </ul>
+            <div class="mt-8 flex flex-wrap gap-3">
+                <a href="{{ route('workabroad.index') }}" class="bg-hbRed text-white px-6 py-3 text-sm font-black uppercase rounded-md hover:bg-red-700 transition">Explore Work Abroad</a>
+                <a href="{{ route('contact.show', ['subject' => 'Work Abroad Program']) }}" class="border-2 border-hbNavy text-hbNavy px-6 py-3 text-sm font-black uppercase rounded-md hover:bg-hbNavy hover:text-white transition">Enquire Now</a>
+            </div>
+        </div>
+
+        <div x-data="{ i: 0, n: {{ max($testimonials->count(), 1) }} }" x-init="n > 1 && setInterval(() => i = (i + 1) % n, 7000)">
+            <h2 class="text-2xl font-black text-hbNavy uppercase mb-5">What Our Students Say</h2>
+            <div class="relative border border-gray-200 rounded-xl p-6 sm:p-8 bg-hbLight min-h-[220px]">
+                <i class="fa-solid fa-quote-left text-5xl text-hbNavy/10 absolute top-5 right-6" aria-hidden="true"></i>
+                @forelse ($testimonials as $index => $t)
+                    <figure x-show="i === {{ $index }}" @if ($index) x-cloak @endif x-transition.opacity class="flex flex-col sm:flex-row gap-5">
+                        <div class="w-20 h-20 rounded-full overflow-hidden bg-brand-100 flex-shrink-0 flex items-center justify-center text-2xl font-black text-hbNavy">
+                            @if ($t->avatar)
+                                <img src="{{ asset('storage/'.$t->avatar) }}" alt="" class="w-full h-full object-cover" loading="lazy">
+                            @else
+                                {{ Str::upper(Str::substr($t->name, 0, 1)) }}
+                            @endif
+                        </div>
+                        <div>
+                            @if ($t->rating)
+                                <div class="text-hbGold text-sm mb-2" aria-label="{{ $t->rating }} out of 5 stars">@for ($s = 1; $s <= 5; $s++)<i class="fa-{{ $s <= $t->rating ? 'solid' : 'regular' }} fa-star"></i>@endfor</div>
+                            @endif
+                            <blockquote class="text-gray-700 italic leading-relaxed">“{{ $t->testimony }}”</blockquote>
+                            <figcaption class="mt-4">
+                                <span class="block text-sm font-black text-hbNavy">{{ $t->name }}</span>
+                                <span class="text-xs text-gray-500">{{ collect([$t->position, $t->company])->filter()->implode(' – ') }}</span>
+                            </figcaption>
+                        </div>
+                    </figure>
+                @empty
+                    <figure class="flex flex-col sm:flex-row gap-5">
+                        <div class="w-20 h-20 rounded-full bg-brand-100 flex-shrink-0 flex items-center justify-center text-2xl font-black text-hbNavy">M</div>
+                        <div>
+                            <blockquote class="text-gray-700 italic leading-relaxed">“Hewitt &amp; Bennet gave me the skills and confidence to work in Germany. The training was excellent and truly life-changing.”</blockquote>
+                            <figcaption class="mt-4"><span class="block text-sm font-black text-hbNavy">Mary W.</span><span class="text-xs text-gray-500">Caregiver – Germany</span></figcaption>
+                        </div>
+                    </figure>
+                @endforelse
+                @if ($testimonials->count() > 1)
+                    <div class="flex justify-center gap-2 mt-6">
+                        @foreach ($testimonials as $index => $t)
+                            <button type="button" @click="i = {{ $index }}" class="w-2.5 h-2.5 rounded-full transition" :class="i === {{ $index }} ? 'bg-hbNavy w-6' : 'bg-gray-300'" aria-label="Show testimonial {{ $index + 1 }}"></button>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ===== ACCREDITATIONS & PARTNERS ===== --}}
+<section class="py-8 bg-gray-50 border-y border-gray-100" aria-label="Accreditations and partners">
+    <h2 class="text-center text-xs font-bold uppercase tracking-[0.2em] text-gray-500 mb-6">Accreditations &amp; Partners</h2>
+    <div class="overflow-hidden">
+        <div class="flex w-max animate-scroll items-center">
+            @foreach ([1, 2] as $copy)
+                <div class="flex items-center gap-12 px-6 flex-shrink-0" @if ($copy === 2) aria-hidden="true" @endif>
+                    @foreach ($partners as $partner)
+                        <img src="{{ asset('storage/'.$partner->logo) }}" alt="{{ $partner->name }}" class="h-14 w-auto object-contain" loading="lazy">
+                    @endforeach
+                    <img src="{{ asset('images/partner-h2.webp') }}" alt="{{ $copy === 1 ? 'Skill Development Council Canada, UKIQ, British Council, IELTS, EuroAmerican Education' : '' }}" class="h-12 w-auto object-contain" loading="lazy">
+                    <img src="{{ asset('images/partner-c1.webp') }}" alt="{{ $copy === 1 ? 'Accreditation and partner logos' : '' }}" class="h-12 w-auto object-contain" loading="lazy">
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- ===== ABOUT ===== --}}
+<section id="about" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-hbNavy text-white px-6 py-10 rounded-t-xl">
+            <h2 class="text-2xl md:text-3xl font-black uppercase">About Hewitt &amp; Bennet International College</h2>
+            <p class="mt-2 text-white/80">A leading TVET institution committed to quality education, practical skills and internationally competitive graduates.</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-10 mt-10">
             <div>
-                <h3 class="text-xl font-semibold mb-4 text-secondary">Contact & Info</h3>
-                <ul class="space-y-2 mb-4">
-                    <li><a href="mailto:info@hewittandbennet.com" class="text-gray-300 hover:text-white transition-colors">Email: info@hewittbennet.co.ke</a></li>
-                    <li><a href="tel:+1234567890" class="text-gray-300 hover:text-white transition-colors">Phone: +254 740 197 796</a></li>
-                    <li class="text-gray-300">Nairobi, Buruburu, Thika</li>
-                </ul>
-                <div class="mt-4">
-                    <p class="text-lg font-semibold text-white">Google Rating: <span class="font-bold">4.9</span> <span class="text-yellow-400">★★★★★</span></p>
-                    <p class="text-sm text-gray-300">Based on student reviews </p>
+                <h3 class="text-xl font-black text-hbNavy uppercase mb-4">College Profile</h3>
+                <p class="text-gray-600 leading-relaxed">Hewitt &amp; Bennet International College is a TVET institution dedicated to quality education and practical training that prepares students for successful careers in Kenya and abroad. We are accredited by TVETA, NITA and CDACC.</p>
+                <div class="grid sm:grid-cols-2 gap-4 mt-6">
+                    <div class="bg-hbLight rounded-lg p-4 border-l-4 border-hbNavy">
+                        <h4 class="font-bold text-hbNavy">Vision</h4>
+                        <p class="text-sm text-gray-600 mt-1">To be a leading institution inspiring innovation, transformation and excellence.</p>
+                    </div>
+                    <div class="bg-hbLight rounded-lg p-4 border-l-4 border-hbRed">
+                        <h4 class="font-bold text-hbRed">Mission</h4>
+                        <p class="text-sm text-gray-600 mt-1">To provide quality education that builds reliable citizens and professionals who transform lives.</p>
+                    </div>
+                </div>
+                <h4 class="font-bold text-hbNavy mt-6">Core Values</h4>
+                <div class="grid grid-cols-2 gap-2 mt-2">
+                    @foreach (['Integrity', 'Excellence', 'Professionalism', 'Inclusivity'] as $value)
+                        <div class="flex items-center gap-2 text-sm text-gray-700 py-2 border-b"><i class="fa-solid fa-diamond text-[8px] text-hbRed"></i> {{ $value }}</div>
+                    @endforeach
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xl font-black text-hbNavy uppercase mb-4">Leadership</h3>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    @forelse ($teams->take(4) as $member)
+                        <div class="border rounded-xl overflow-hidden">
+                            <img src="{{ asset('storage/'.$member->image) }}" alt="{{ $member->name }}" class="w-full h-56 object-cover object-top" loading="lazy">
+                            <div class="p-4">
+                                <h4 class="font-black text-hbNavy text-sm uppercase">{{ $member->name }}</h4>
+                                <p class="text-xs text-gray-500 mt-1">{{ Str::limit(strip_tags($member->description), 110) }}</p>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="border rounded-xl overflow-hidden">
+                            <img src="{{ asset('images/director.webp') }}" alt="Patrick Hawala, Director" class="w-full h-56 object-cover object-top" loading="lazy">
+                            <div class="p-4">
+                                <h4 class="font-black text-hbNavy text-sm">PATRICK HAWALA</h4>
+                                <p class="text-hbRed font-bold text-xs">Director</p>
+                                <p class="text-xs text-gray-500 mt-1">Provides strategic leadership with extensive experience in TVET education and management.</p>
+                            </div>
+                        </div>
+                    @endforelse
+                    <div class="border rounded-xl p-5 flex flex-col justify-between bg-hbLight">
+                        <div>
+                            <h4 class="font-black text-hbNavy text-sm uppercase">Accredited &amp; Recognised</h4>
+                            <ul class="mt-3 space-y-2 text-sm text-gray-700">
+                                <li><i class="fa-solid fa-circle-check text-hbRed mr-2"></i>TVETA registered institution</li>
+                                <li><i class="fa-solid fa-circle-check text-hbRed mr-2"></i>NITA accredited trade tests</li>
+                                <li><i class="fa-solid fa-circle-check text-hbRed mr-2"></i>TVET CDACC competency-based programs</li>
+                            </ul>
+                        </div>
+                        <a href="{{ route('hewitt_Captain.accreditations') }}" class="mt-5 text-xs font-bold uppercase text-hbNavy hover:text-hbRed">Our accreditations →</a>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</section>
 
-        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-            <p>&copy; 2025 Hewitt And Bennet International College. All rights reserved.</p>
+{{-- ===== COURSES ===== --}}
+<section id="courses" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-hbNavy text-white px-6 py-10 rounded-t-xl">
+            <h2 class="text-2xl md:text-3xl font-black uppercase">Our Courses</h2>
+            <p class="mt-2 text-white/80">Accredited, practical programs for in-demand careers – locally and internationally</p>
         </div>
-    </footer>
+        <div class="bg-white shadow-lg rounded-b-xl overflow-hidden">
+            {{-- Cards on phones, table on larger screens --}}
+            <div class="md:hidden divide-y">
+                @foreach ($coursese as $course)
+                    <div class="p-5">
+                        <a href="{{ route('course.single', $course->slug) }}" class="font-bold text-hbNavy hover:text-hbRed">{{ $course->name }}</a>
+                        <p class="text-xs text-gray-500 mt-1">{{ $course->duration ?: '—' }} · {{ $course->department->name ?? 'General' }}</p>
+                        <p class="text-sm font-semibold mt-2">{{ $feeLabel($course) }}</p>
+                        <div class="flex gap-2 mt-3">
+                            <a href="{{ route('course.single', $course->slug) }}" class="flex-1 text-center border border-hbNavy text-hbNavy px-3 py-2 rounded-md text-xs font-bold">Learn More</a>
+                            <button type="button" onclick="openEnrollModal({{ $course->id }})" class="flex-1 bg-hbRed text-white px-3 py-2 rounded-md text-xs font-bold">Apply</button>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="hidden md:block overflow-x-auto">
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-brand-50 text-hbNavy text-xs uppercase text-left">
+                            <th class="px-4 py-3 font-bold">Course</th>
+                            <th class="px-4 py-3 font-bold">Department</th>
+                            <th class="px-4 py-3 font-bold">Duration</th>
+                            <th class="px-4 py-3 font-bold">Fees</th>
+                            <th class="px-4 py-3 font-bold sr-only">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        @forelse ($coursese as $course)
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-4 py-4">
+                                    <a href="{{ route('course.single', $course->slug) }}" class="font-bold text-hbNavy hover:text-hbRed">{{ $course->name }}</a>
+                                    <p class="text-xs text-gray-500 mt-1 max-w-md">{{ Str::limit(strip_tags($course->course_description), 90) }}</p>
+                                </td>
+                                <td class="px-4 py-4 text-gray-600">{{ $course->department->name ?? '—' }}</td>
+                                <td class="px-4 py-4 whitespace-nowrap">{{ $course->duration ?: '—' }}</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-semibold">{{ $feeLabel($course) }}</td>
+                                <td class="px-4 py-4">
+                                    <div class="flex gap-2 justify-end">
+                                        <a href="{{ route('course.single', $course->slug) }}" class="border border-hbNavy text-hbNavy px-3 py-2 rounded-md text-xs font-bold hover:bg-hbNavy hover:text-white transition whitespace-nowrap">Learn More</a>
+                                        <button type="button" onclick="openEnrollModal({{ $course->id }})" class="bg-hbRed text-white px-4 py-2 rounded-md text-xs font-bold hover:bg-red-700 transition">Apply</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="5" class="text-center py-10 text-gray-500">Courses will be published soon.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <p class="px-6 py-4 bg-gray-50 border-t text-sm text-gray-600"><i class="fa-solid fa-circle-info text-hbRed mr-2"></i>Fees are subject to change. See the <a href="{{ route('courses.fees') }}" class="font-semibold text-hbNavy underline">fees structure</a> or contact us for the latest figures.</p>
+        </div>
+    </div>
+</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <script>
-        // Alpine.js components
-        document.addEventListener('alpine:init', () => {
-            // Carousel component
-            Alpine.data('carousel', () => ({
-                currentIndex: 0,
-                totalItems: {{ count($banners) }},
-                interval: null,
+{{-- ===== ADMISSIONS ===== --}}
+<section id="admissions" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-hbNavy text-white px-6 py-10 rounded-t-xl">
+            <h2 class="text-2xl md:text-3xl font-black uppercase">Admissions</h2>
+            <p class="mt-2 text-white/80">Five simple steps to join one of our programs</p>
+        </div>
+        <div class="bg-white shadow-lg rounded-b-xl p-6 sm:p-8">
+            <ol class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                @foreach ($steps as $n => [$title, $text])
+                    <li class="text-center p-5 border rounded-xl hover:border-hbNavy transition">
+                        <span class="w-12 h-12 bg-hbNavy text-white rounded-full flex items-center justify-center text-xl font-black mx-auto mb-3">{{ $n + 1 }}</span>
+                        <h3 class="font-bold text-hbNavy text-sm">{{ $title }}</h3>
+                        <p class="text-xs text-gray-500 mt-1">{{ $text }}</p>
+                    </li>
+                @endforeach
+            </ol>
+            <div class="grid md:grid-cols-3 gap-8 mt-10">
+                <div>
+                    <h3 class="font-bold text-hbNavy text-lg">Entry Requirements</h3>
+                    <ul class="mt-3 space-y-2 text-sm text-gray-600">
+                        @foreach (['KCSE Certificate (or international equivalent)', 'Minimum Grade C (Plain)', 'Age 17 years and above', 'Valid Birth Certificate'] as $req)
+                            <li class="flex gap-2 border-b pb-2"><i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i>{{ $req }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-hbNavy text-lg">Required Documents</h3>
+                    <ul class="mt-3 space-y-2 text-sm text-gray-600">
+                        @foreach (['Academic certificates & result slips', 'National ID, birth certificate or passport', 'Two passport-size photos', 'Completed application form'] as $doc)
+                            <li class="flex gap-2 border-b pb-2"><i class="fa-solid fa-file-lines text-hbNavy mt-0.5"></i>{{ $doc }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-hbNavy text-lg">Intakes</h3>
+                    <div class="grid grid-cols-2 gap-3 mt-3">
+                        <div class="bg-hbNavy text-white p-4 rounded-lg text-center"><span class="block text-lg font-black">Monthly</span><span class="text-xs text-white/70">Regular intake</span></div>
+                        <div class="bg-hbRed text-white p-4 rounded-lg text-center"><span class="block text-lg font-black">Open</span><span class="text-xs text-white/80">Rolling enrolment</span></div>
+                    </div>
+                    <a href="{{ route('courses.fees') }}" class="mt-4 inline-block text-sm font-bold text-hbNavy hover:text-hbRed">View fees structure →</a>
+                </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-3 mt-10">
+                <a href="{{ route('registration.create') }}" class="bg-hbRed text-white px-8 py-3 text-sm font-black uppercase rounded-md hover:bg-red-700 transition">Apply Online</a>
+                <a href="{{ route('contact.show', ['subject' => 'Admissions Enquiry']) }}" class="border-2 border-hbNavy text-hbNavy px-8 py-3 text-sm font-black uppercase rounded-md hover:bg-hbNavy hover:text-white transition">Contact Admissions</a>
+            </div>
+        </div>
+    </div>
+</section>
 
-                init() {
-                    this.startAutoSlide();
-                },
+{{-- ===== CAMPUSES ===== --}}
+<section id="campuses" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-hbNavy text-white px-6 py-10 rounded-t-xl">
+            <h2 class="text-2xl md:text-3xl font-black uppercase">Our Campuses</h2>
+            <p class="mt-2 text-white/80">Quality education close to you – {{ count($college['campuses']) }} campuses in and around Nairobi</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            @foreach ($college['campuses'] as $campus)
+                <div class="bg-white border rounded-xl overflow-hidden hover:shadow-lg transition flex flex-col">
+                    @if ($campus['image'])
+                        <img src="{{ asset($campus['image']) }}" alt="{{ $campus['name'] }}" class="w-full h-44 object-cover" loading="lazy">
+                    @else
+                        <div class="w-full h-44 bg-gradient-to-br from-hbNavy to-brand-600 flex items-center justify-center text-5xl text-white/30"><i class="fa-solid fa-building-columns"></i></div>
+                    @endif
+                    <div class="p-5 flex flex-col flex-1">
+                        <h3 class="font-black text-hbNavy text-lg">{{ $campus['name'] }}</h3>
+                        <p class="text-sm text-gray-500 mt-1"><i class="fa-solid fa-location-dot text-hbRed mr-1"></i>{{ $campus['address'] }}</p>
+                        <p class="text-sm text-gray-600 mt-2 flex-1">{{ $campus['blurb'] }}</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode('Hewitt and Bennet International College '.$campus['name'].' '.$campus['address']) }}" target="_blank" rel="noopener"
+                           class="mt-4 inline-flex items-center justify-center gap-2 border-2 border-hbNavy text-hbNavy px-4 py-2 text-xs font-bold rounded-md hover:bg-hbNavy hover:text-white transition">
+                            <i class="fa-solid fa-diamond-turn-right"></i> Get Directions
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
 
-                next() {
-                    this.currentIndex = (this.currentIndex + 1) % this.totalItems;
-                    this.restartAutoSlide();
-                },
+{{-- ===== NEWS ===== --}}
+<section id="news" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-hbNavy text-white px-6 py-10 rounded-t-xl">
+            <h2 class="text-2xl md:text-3xl font-black uppercase">News &amp; Events</h2>
+            <p class="mt-2 text-white/80">The latest from Hewitt &amp; Bennet International College</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6 mt-6">
+            @forelse ($news as $item)
+                <article class="bg-white border rounded-xl overflow-hidden hover:shadow-lg transition flex flex-col">
+                    <img src="{{ asset('storage/'.$item->cover_image) }}" alt="" class="w-full h-48 object-cover" loading="lazy">
+                    <div class="p-5 flex flex-col flex-1">
+                        <time class="text-[11px] font-bold uppercase tracking-wider text-gray-500" datetime="{{ $item->created_at?->toDateString() }}">{{ $item->created_at?->format('d M Y') }}</time>
+                        <h3 class="font-black text-hbNavy mt-2 mb-2">{{ $item->title }}</h3>
+                        <p class="text-gray-600 text-sm flex-1">{{ Str::limit(strip_tags($item->content), 120) }}</p>
+                        <a href="{{ route('newsandevent.show', $item->slug) }}" class="text-hbRed text-sm font-bold mt-3 hover:underline">Read more →</a>
+                    </div>
+                </article>
+            @empty
+                @foreach ([
+                    ['news-germany', 'Germany', 'Germany Opportunities Still Open', 'High demand for Kenyan caregivers in Germany. We provide full pre-departure support and placement.', route('workabroad.index'), 'Learn more'],
+                    ['news-caregiving', 'Caregiving', 'New Caregiving Pathways Program', 'Training, German language, documentation and placement support – all in one structured program.', route('hewitt_Captain.caregivercourses'), 'View program'],
+                    ['news-visa', 'Visa Support', 'End-to-End Visa Assistance', 'Our experienced team handles your complete visa documentation and submission process.', route('contact.show', ['subject' => 'Work Abroad Program']), 'Enquire now'],
+                ] as [$img, $tag, $title, $text, $link, $cta])
+                    <article class="bg-white border rounded-xl overflow-hidden hover:shadow-lg transition flex flex-col">
+                        <img src="{{ asset("images/$img.webp") }}" alt="" class="w-full h-48 object-cover" loading="lazy">
+                        <div class="p-5 flex flex-col flex-1">
+                            <span class="self-start bg-brand-50 text-hbNavy text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded">{{ $tag }}</span>
+                            <h3 class="font-black text-hbNavy mt-3 mb-2">{{ $title }}</h3>
+                            <p class="text-gray-600 text-sm flex-1">{{ $text }}</p>
+                            <a href="{{ $link }}" class="text-hbRed text-sm font-bold mt-3 hover:underline">{{ $cta }} →</a>
+                        </div>
+                    </article>
+                @endforeach
+            @endforelse
+        </div>
+        <div class="text-center mt-8">
+            <a href="{{ route('news.event') }}" class="bg-hbNavy text-white px-8 py-3 text-sm font-black uppercase rounded-md hover:bg-brand-700 transition inline-block">View All News</a>
+        </div>
+    </div>
+</section>
 
-                prev() {
-                    this.currentIndex = (this.currentIndex - 1 + this.totalItems) % this.totalItems;
-                    this.restartAutoSlide();
-                },
+{{-- ===== GALLERY ===== --}}
+<section id="gallery" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-hbNavy text-white px-6 py-10 rounded-t-xl">
+            <h2 class="text-2xl md:text-3xl font-black uppercase">Gallery</h2>
+            <p class="mt-2 text-white/80">Moments from our campuses, graduations and activities</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            @php
+                $photos = $galleryItems->map(fn ($g) => [asset('storage/'.$g->file_path), $g->title])
+                    ->concat(collect($fallbackGallery)->map(fn ($f) => [asset("images/$f.webp"), 'Hewitt & Bennet students']))
+                    ->take(8);
+            @endphp
+            @foreach ($photos as [$src, $alt])
+                <a href="{{ route('student.gallery') }}" class="block rounded-xl overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="{{ $src }}" alt="{{ $alt }}" class="w-full h-48 object-cover hover:scale-105 transition duration-300" loading="lazy">
+                </a>
+            @endforeach
+        </div>
+        <div class="text-center mt-8">
+            <a href="{{ route('student.gallery') }}" class="bg-hbRed text-white px-8 py-3 text-sm font-black uppercase rounded-md hover:bg-red-700 transition inline-block">View Full Gallery</a>
+        </div>
+    </div>
+</section>
 
-                goTo(index) {
-                    this.currentIndex = index;
-                    this.restartAutoSlide();
-                },
+{{-- ===== CONTACT ===== --}}
+<section id="contact" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="bg-hbNavy text-white px-6 py-10 rounded-t-xl">
+            <h2 class="text-2xl md:text-3xl font-black uppercase">Contact Us</h2>
+            <p class="mt-2 text-white/80">We'd love to hear from you. Our team responds within one working day.</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-10 mt-10">
+            @include('frontendviews.partials.contact-details')
+            @include('frontendviews.partials.contact-form')
+        </div>
+    </div>
+</section>
 
-                startAutoSlide() {
-                    this.interval = setInterval(() => {
-                        this.next();
-                    }, 7000);
-                },
-
-                restartAutoSlide() {
-                    clearInterval(this.interval);
-                    this.startAutoSlide();
-                }
-            }));
-
-            // Initialize apply buttons to open modal
-            document.querySelectorAll('.apply-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const courseId = btn.getAttribute('data-course');
-                    Alpine.store('modal').open = true;
-                    Alpine.store('modal').selectedCourse = courseId;
-
-                    // Set the course value in the form if needed
-                    if (courseId) {
-                        document.getElementById('course_id').value = courseId;
-                    }
-                });
-            });
-        });
-
-        // Simple store for modal state
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('modal', {
-                open: false,
-                selectedCourse: ''
-            });
-        });
-
-        // Chatbot functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatbotMessages = document.getElementById('chatbot-messages');
-            const chatbotInput = document.getElementById('chatbot-input');
-            const chatbotSend = document.getElementById('chatbot-send');
-
-            function displayMessage(text, sender) {
-                const msg = document.createElement('div');
-                msg.classList.add('message', sender);
-                msg.textContent = text;
-                chatbotMessages.appendChild(msg);
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-            }
-
-            chatbotSend.addEventListener('click', () => {
-                const text = chatbotInput.value.trim();
-                if (!text) return;
-                displayMessage(text, 'user');
-                chatbotInput.value = '';
-                setTimeout(() => displayMessage("Thank you! We'll be in touch.", 'bot'), 500);
-            });
-
-            chatbotInput.addEventListener('keypress', e => {
-                if (e.key === 'Enter') chatbotSend.click();
-            });
-        });
-    </script>
-</body>
-</html>
+@include('frontendviews.partials.enroll-modal')
+@endsection

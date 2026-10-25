@@ -66,9 +66,9 @@
             <div class="space-y-4">
                 <!-- Email Input -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                    <input id="email" name="email" type="email" autocomplete="email" required
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email or Username / Admission No.</label>
+                    <input id="email" name="email" type="text" autocomplete="username" required
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-500 focus:border-brand-500 focus:z-10 sm:text-sm"
                            placeholder="Enter your email address" value="{{ old('email') }}">
                 </div>
 
@@ -76,7 +76,7 @@
                 <div class="relative">
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input id="password" name="password" type="password" autocomplete="current-password" required
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm pr-10"
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-500 focus:border-brand-500 focus:z-10 sm:text-sm pr-10"
                            placeholder="Enter your password">
                     <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center mt-6 text-gray-400 hover:text-gray-600">
                         <i class="far fa-eye"></i>
@@ -86,18 +86,18 @@
                 <!-- Remember Me & Forgot Password -->
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" {{ old('remember') ? 'checked' : '' }}>
+                        <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-brand-600 focus:ring-brand-500 border-gray-300 rounded" {{ old('remember') ? 'checked' : '' }}>
                         <label for="remember" class="ml-2 block text-sm text-gray-900">Remember Me</label>
                     </div>
                     <div class="text-sm">
-                        <a href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot Password?</a>
+                        <a href="{{ route('password.request') }}" class="font-medium text-brand-600 hover:text-brand-500">Forgot Password?</a>
                     </div>
                 </div>
             </div>
 
             <!-- Login Button -->
             <div>
-                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition duration-300">
                     Sign In
                 </button>
             </div>
@@ -105,13 +105,13 @@
             <!-- Register Link -->
             <div class="text-center">
                 <p class="text-sm text-gray-600">
-                    Don't have an account?
-                    <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500 ml-1">
-                        Create Account
+                    Portal accounts are issued by the college on admission or employment.
+                    <a href="{{ route('registration.create') }}" class="font-medium text-brand-600 hover:text-brand-500 ml-1">
+                        Apply for admission
                     </a>
                 </p>
                 <p class="mt-2 text-sm text-gray-600">
-                    <a href="{{ url('/') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                    <a href="{{ url('/') }}" class="font-medium text-brand-600 hover:text-brand-500">
                         Return to Homepage
                     </a>
                 </p>
@@ -119,8 +119,8 @@
         </form>
 
         <!-- Security Notice -->
-        <div class="mt-6 p-3 bg-blue-50 rounded-lg border border-blue-100">
-            <p class="text-xs text-blue-700 text-center">
+        <div class="mt-6 p-3 bg-brand-50 rounded-lg border border-brand-100">
+            <p class="text-xs text-brand-700 text-center">
                 <i class="fas fa-shield-alt mr-1"></i>
                 Your privacy and security are important to us. This is a secure login portal.
             </p>

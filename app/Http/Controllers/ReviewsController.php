@@ -7,74 +7,38 @@ use Illuminate\Http\Request;
 
 class ReviewsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $review = reviews::all(); // Fetch all banners from the database
-        return view('dashboards.staff.reviews.index',compact('review'));
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $review = reviews::latest()->get();
+
+        return view('dashboards.staff.reviews.index', compact('review'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    /** Public review form: reviews stay hidden until an administrator approves them. */
     public function store(Request $request)
     {
-           // Validate the incoming request data
-           $validatedData = $request->validate([
-            'name' => 'required|string',
-            'message' => 'required|string',
-            'rate' => 'required|integer|min:1|max:5', // Adjust the validation rules for your rating scale
-
-
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'message' => 'required|string|max:2000',
+            'rate' => 'required|integer|min:1|max:5',
         ]);
-        // Create a new testimonial using the validated data
-        $reviews = reviews::create($validatedData);
 
+        reviews::create($validated + ['status' => false]);
 
-
-        return redirect()->route('testimonials.index'); // Redirect to the testimonials listing page
+        return back()->with('success', 'Thank you! Your review will appear once approved.');
     }
 
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(reviews $reviews)
+    public function approve(reviews $review)
     {
-        //
+        $review->update(['status' => true]);
+
+        return back()->with('success', 'Review approved.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(reviews $reviews)
+    public function destroy(reviews $review)
     {
-        //
-    }
+        $review->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, reviews $reviews)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(reviews $reviews)
-    {
-        //
+        return back()->with('success', 'Review deleted.');
     }
 }

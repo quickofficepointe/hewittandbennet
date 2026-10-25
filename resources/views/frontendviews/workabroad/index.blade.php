@@ -23,7 +23,7 @@
 @section('twitter:site', '@HewittBennetIntl')
 
 @section('content')
-<section class="py-16 bg-gradient-to-br from-blue-50 to-indigo-100">
+<section class="py-16 bg-gradient-to-br from-brand-50 to-brand-100">
     <div class="container mx-auto px-4">
         <!-- Page Header -->
         <div class="text-center mb-12">
@@ -147,7 +147,7 @@
             <h2 class="text-3xl font-bold text-primary text-center mb-12">Our Caregivers Specialize In</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white rounded-xl shadow-lg p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-user-md text-primary text-2xl"></i>
                     </div>
                     <h3 class="font-semibold text-primary mb-2">Patient Care / Nursing Care</h3>
@@ -155,7 +155,7 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-lg p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-baby text-primary text-2xl"></i>
                     </div>
                     <h3 class="font-semibold text-primary mb-2">Child Care & Protection</h3>
@@ -163,7 +163,7 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-lg p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-wheelchair text-primary text-2xl"></i>
                     </div>
                     <h3 class="font-semibold text-primary mb-2">Senior Care / Aged Care</h3>
@@ -171,7 +171,7 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-lg p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-heart text-primary text-2xl"></i>
                     </div>
                     <h3 class="font-semibold text-primary mb-2">Disability Care & Support</h3>
@@ -184,7 +184,7 @@
         <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl shadow-xl p-8 md:p-12 text-white mb-16">
             <div class="max-w-4xl mx-auto text-center">
                 <h2 class="text-3xl font-bold mb-6">Internationally Recognized Certification</h2>
-                <p class="text-blue-100 mb-6">Our training program is NITA certified and recognized by International Caregiver Associations for its quality training standards and comprehensive curriculum.</p>
+                <p class="text-brand-100 mb-6">Our training program is NITA certified and recognized by International Caregiver Associations for its quality training standards and comprehensive curriculum.</p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
                     <div class="bg-white bg-opacity-20 rounded-lg p-4">
                         <i class="fas fa-award text-3xl mb-2"></i>

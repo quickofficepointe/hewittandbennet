@@ -24,7 +24,7 @@
 
 @section('content')
 <!-- Gallery Section -->
-<section class="py-16 bg-gradient-to-br from-blue-50 to-indigo-100">
+<section class="py-16 bg-gradient-to-br from-brand-50 to-brand-100">
     <div class="container mx-auto px-4">
         <!-- Page Header -->
         <div class="text-center mb-12">
@@ -112,7 +112,7 @@
         <!-- Empty State -->
         @if(count($galleryItems) === 0)
             <div class="text-center py-12">
-                <div class="inline-flex items-center justify-center rounded-full bg-blue-100 p-4 mb-4">
+                <div class="inline-flex items-center justify-center rounded-full bg-brand-100 p-4 mb-4">
                     <i class="fas fa-camera text-3xl text-primary"></i>
                 </div>
                 <h3 class="text-xl font-semibold text-gray-700 mb-2">No gallery items yet</h3>
@@ -175,7 +175,7 @@
     }
 
     .filter-btn.active {
-        background-color: #1E3A8A;
+        background-color: #071B4D;
         color: white;
     }
 </style>

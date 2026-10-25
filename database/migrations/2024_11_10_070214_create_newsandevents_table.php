@@ -22,7 +22,6 @@ return new class extends Migration
 
             // Adding index for title and content for faster searches
             $table->index('title');
-            $table->index('content'); // Index content for full-text search optimization (if needed)
         });
 
     }

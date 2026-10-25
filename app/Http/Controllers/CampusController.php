@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\campus;
+use App\Models\Campus;
 use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Str;
@@ -63,7 +63,7 @@ class CampusController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(campus $campus)
+    public function show(Campus $campus)
     {
         //
     }
@@ -71,7 +71,7 @@ class CampusController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(campus $campus)
+    public function edit(Campus $campus)
     {
         //
     }
@@ -105,8 +105,10 @@ class CampusController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(campus $campus)
+    public function destroy(Campus $campus)
     {
-        //
+        $campus->delete();
+
+        return back()->with('success', 'Campus deleted!');
     }
 }

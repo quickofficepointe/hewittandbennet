@@ -68,7 +68,7 @@
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
                     <input id="name" name="name" type="text" required
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-500 focus:border-brand-500 focus:z-10 sm:text-sm"
                            placeholder="Enter your full name" value="{{ old('name') }}">
                 </div>
 
@@ -76,7 +76,7 @@
                 <div>
                     <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
                     <input id="username" name="username" type="text" required
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-500 focus:border-brand-500 focus:z-10 sm:text-sm"
                            placeholder="Choose a username" value="{{ old('username') }}">
                 </div>
 
@@ -84,7 +84,7 @@
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
                     <input id="email" name="email" type="email" autocomplete="email" required
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-500 focus:border-brand-500 focus:z-10 sm:text-sm"
                            placeholder="Enter your email address" value="{{ old('email') }}">
                 </div>
 
@@ -92,7 +92,7 @@
                 <div class="relative">
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input id="password" name="password" type="password" autocomplete="new-password" required
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm pr-10"
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-500 focus:border-brand-500 focus:z-10 sm:text-sm pr-10"
                            placeholder="Create a strong password">
                     <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center mt-6 text-gray-400 hover:text-gray-600">
                         <i class="far fa-eye"></i>
@@ -104,7 +104,7 @@
                 <div class="relative">
                     <label for="password-confirm" class="block text-sm font-medium text-gray-700">Confirm Password</label>
                     <input id="password-confirm" name="password_confirmation" type="password" autocomplete="new-password" required
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm pr-10"
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-500 focus:border-brand-500 focus:z-10 sm:text-sm pr-10"
                            placeholder="Confirm your password">
                     <button type="button" id="toggle-password-confirm" class="absolute inset-y-0 right-0 pr-3 flex items-center mt-6 text-gray-400 hover:text-gray-600">
                         <i class="far fa-eye"></i>
@@ -114,7 +114,7 @@
 
             <!-- Register Button -->
             <div>
-                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition duration-300">
                     Create Account
                 </button>
             </div>
@@ -123,7 +123,7 @@
             <div class="text-center">
                 <p class="text-sm text-gray-600">
                     Already have an account?
-                    <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500 ml-1">
+                    <a href="{{ route('login') }}" class="font-medium text-brand-600 hover:text-brand-500 ml-1">
                         Sign In
                     </a>
                 </p>
@@ -131,8 +131,8 @@
         </form>
 
         <!-- Security Notice -->
-        <div class="mt-6 p-3 bg-blue-50 rounded-lg border border-blue-100">
-            <p class="text-xs text-blue-700 text-center">
+        <div class="mt-6 p-3 bg-brand-50 rounded-lg border border-brand-100">
+            <p class="text-xs text-brand-700 text-center">
                 <i class="fas fa-shield-alt mr-1"></i>
                 Your information is secure and protected. We value your privacy.
             </p>

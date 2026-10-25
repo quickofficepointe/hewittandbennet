@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\team;
+use App\Models\Team;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -49,7 +49,7 @@ class TeamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(team $team)
+    public function show(Team $team)
     {
         //
     }
@@ -57,7 +57,7 @@ class TeamController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(team $team)
+    public function edit(Team $team)
     {
         //
     }

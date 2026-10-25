@@ -52,26 +52,6 @@ class Kernel extends HttpKernel
      *
      * @var array<string, class-string|string>
      */
-    protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'isDirector' => \App\Http\Middleware\isDirectormiddleware::class,
-        'isStaff' => \App\Http\Middleware\isStaffmiddleware::class,
-        'isStudent' => \App\Http\Middleware\isStudentmiddleware::class,
-        'isTutor' => \App\Http\Middleware\isTutormiddleware::class,
-        'preventBackHistory' => \App\Http\Middleware\PreventBackHistory::class,
-        'check_permissions' => \App\Http\Middleware\CheckPermissions::class,
-        'PreventBackHistory' => \App\Http\Middleware\PreventBackHistory::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
-        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'signed' => \App\Http\Middleware\ValidateSignature::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-    ];
-
     protected $middlewareAliases = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
@@ -84,11 +64,9 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'isDirector' => \App\Http\Middleware\isDirectormiddleware::class,
-        'isStaff' => \App\Http\Middleware\isStaffmiddleware::class,
-        'isStudent' => \App\Http\Middleware\isStudentmiddleware::class,
-        'isTutor' => \App\Http\Middleware\isTutormiddleware::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
         'preventBackHistory' => \App\Http\Middleware\PreventBackHistory::class,
+        'PreventBackHistory' => \App\Http\Middleware\PreventBackHistory::class,
     ];
 
 }

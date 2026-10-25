@@ -22,6 +22,8 @@
 @section('twitter:image', asset('assets/img/hbiclogo.jpeg'))
 @section('twitter:site', '@HewittBennetIntl')
 
+@section('inline-flash', '1')
+
 @section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 bg-white rounded-xl shadow-lg p-8">
@@ -63,7 +65,7 @@
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
                     <input id="email" name="email" type="email" autocomplete="email" required
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-500 focus:border-brand-500 focus:z-10 sm:text-sm"
                            placeholder="Enter your email address" value="{{ old('email') }}">
 
                     @error('email')
@@ -74,22 +76,22 @@
 
             <!-- Submit Button -->
             <div>
-                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition duration-300">
                     Send Password Reset Link
                 </button>
             </div>
 
             <!-- Back to Login Link -->
             <div class="text-center mt-4">
-                <a href="{{ route('login') }}" class="text-sm text-indigo-600 hover:text-indigo-500 font-medium">
+                <a href="{{ route('login') }}" class="text-sm text-brand-600 hover:text-brand-500 font-medium">
                     Back to Login
                 </a>
             </div>
         </form>
 
         <!-- Support Notice -->
-        <div class="mt-6 p-3 bg-blue-50 rounded-lg border border-blue-100">
-            <p class="text-xs text-blue-700 text-center">
+        <div class="mt-6 p-3 bg-brand-50 rounded-lg border border-brand-100">
+            <p class="text-xs text-brand-700 text-center">
                 <i class="fas fa-envelope mr-1"></i>
                 Check your spam folder if you don't receive the email within a few minutes.
             </p>

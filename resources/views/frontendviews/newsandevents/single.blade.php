@@ -23,14 +23,14 @@
 @section('twitter:site', '@HewittBennetIntl')
 
 @section('content')
-<section class="py-12 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+<section class="py-12 bg-gradient-to-br from-brand-50 to-brand-100 min-h-screen">
     <div class="container mx-auto px-4 max-w-6xl">
         <!-- Breadcrumb Navigation -->
         <nav class="mb-8">
             <ol class="flex items-center space-x-2 text-sm text-gray-600">
-                <li><a href="{{ route('home') }}" class="hover:text-primary transition-colors">Home</a></li>
+                <li><a href="{{ url('/') }}" class="hover:text-primary transition-colors">Home</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li><a href="{{ route('newsandevent.index') }}" class="hover:text-primary transition-colors">News & Events</a></li>
+                <li><a href="{{ route('news.event') }}" class="hover:text-primary transition-colors">News & Events</a></li>
                 <li><span class="mx-2">/</span></li>
                 <li class="text-primary font-medium">{{ Str::limit($event->title, 30) }}</li>
             </ol>
@@ -107,17 +107,17 @@
                             <div class="flex flex-wrap gap-3">
                                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ route('newsandevent.show', $event->slug) }}"
                                    target="_blank"
-                                   class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                   class="flex items-center px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors">
                                     <i class="fab fa-facebook-f mr-2"></i> Facebook
                                 </a>
                                 <a href="https://twitter.com/intent/tweet?url={{ route('newsandevent.show', $event->slug) }}&text={{ urlencode($event->title) }}"
                                    target="_blank"
-                                   class="flex items-center px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors">
+                                   class="flex items-center px-4 py-2 bg-brand-400 text-white rounded-lg hover:bg-brand-500 transition-colors">
                                     <i class="fab fa-twitter mr-2"></i> Twitter
                                 </a>
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ route('newsandevent.show', $event->slug) }}"
                                    target="_blank"
-                                   class="flex items-center px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors">
+                                   class="flex items-center px-4 py-2 bg-brand-700 text-white rounded-lg hover:bg-brand-800 transition-colors">
                                     <i class="fab fa-linkedin-in mr-2"></i> LinkedIn
                                 </a>
                                 <a href="https://wa.me/?text={{ urlencode(route('newsandevent.show', $event->slug) . ' ' . $event->title) }}"
@@ -182,7 +182,7 @@
                         @endforeach
                     </ul>
                     <div class="mt-6 pt-4 border-t border-gray-100">
-                        <a href="{{ route('newsandevent.index') }}"
+                        <a href="{{ route('news.event') }}"
                            class="text-primary font-semibold hover:text-secondary transition-colors flex items-center">
                             View All News
                             <i class="fas fa-arrow-right ml-2 text-sm"></i>
@@ -195,21 +195,21 @@
                     <h3 class="text-xl font-bold text-primary mb-6 pb-3 border-b border-gray-100">Categories</h3>
                     <ul class="space-y-3">
                         <li>
-                            <a href="{{ route('newsandevent.index', ['category' => 'news']) }}"
+                            <a href="{{ route('news.event', ['category' => 'news']) }}"
                                class="flex justify-between items-center py-2 text-gray-700 hover:text-primary transition-colors">
                                 <span>News</span>
                                 <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">14</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('newsandevent.index', ['category' => 'events']) }}"
+                            <a href="{{ route('news.event', ['category' => 'events']) }}"
                                class="flex justify-between items-center py-2 text-gray-700 hover:text-primary transition-colors">
                                 <span>Events</span>
                                 <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">8</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('newsandevent.index', ['category' => 'announcements']) }}"
+                            <a href="{{ route('news.event', ['category' => 'announcements']) }}"
                                class="flex justify-between items-center py-2 text-gray-700 hover:text-primary transition-colors">
                                 <span>Announcements</span>
                                 <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">5</span>
@@ -221,7 +221,7 @@
                 <!-- Newsletter Subscription -->
                 <div class="bg-gradient-to-r from-primary to-secondary rounded-xl shadow-lg p-6 text-white">
                     <h3 class="text-xl font-bold mb-3">Stay Updated</h3>
-                    <p class="text-blue-100 mb-4">Subscribe to our newsletter for the latest news and updates.</p>
+                    <p class="text-brand-100 mb-4">Subscribe to our newsletter for the latest news and updates.</p>
                     <form class="space-y-3">
                         <input type="email" placeholder="Your email address"
                                class="w-full px-4 py-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-white">
@@ -246,14 +246,14 @@
     .prose h2 {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #1E3A8A;
+        color: #071B4D;
         margin-top: 2rem;
         margin-bottom: 1rem;
     }
     .prose h3 {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #1E3A8A;
+        color: #071B4D;
         margin-top: 1.5rem;
         margin-bottom: 1rem;
     }

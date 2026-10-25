@@ -35,14 +35,14 @@
         <div class="message-container p-6 bg-gray-100 rounded-lg shadow-md">
             <h2 class="text-center text-2xl font-semibold mb-4">Director's Message</h2>
             <p class="director-message text-lg text-gray-700 leading-relaxed mt-4 text-justify">
-                <i class="fas fa-quote-left text-2xl text-blue-500"></i>
+                <i class="fas fa-quote-left text-2xl text-brand-500"></i>
                 <p>
                     Welcome to Hewitt and Bennet International College. Come and discuss your dream with us. At Hewitt and Bennet International College, we don’t wait for success to happen — we make it happen!
                 </p>
                 <p class="mt-4">
                     We are committed to making your dreams valid. It has worked for our alumni, and it can work for you too. Enroll today and let our friendly, supportive staff welcome you officially.
                 </p>
-                <i class="fas fa-quote-right text-2xl text-blue-500 mt-4"></i>
+                <i class="fas fa-quote-right text-2xl text-brand-500 mt-4"></i>
             </p>
         </div>
     </div>

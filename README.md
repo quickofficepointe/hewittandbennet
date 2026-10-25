@@ -1,70 +1,57 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Hewitt and Bennet International College – Website & College Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 10 application with two parts:
 
-## About Laravel
+- **Public website** (`/`): courses, admissions, news, gallery, careers, fees structure.
+- **Public website details** (phones, email, WhatsApp, campuses, social links, homepage stats) live in `config/college.php`; social links come from `SOCIAL_*` in `.env`. Contact-form messages appear in the portal under Website → Contact Messages. Static website images are web-optimised WebP files in `public/images/`.
+- **College Management System portal** (`/portal`): one login page, one layout, and a menu that changes with the user's role.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Roles and modules
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Role | Code | What they do |
+|---|---|---|
+| Director | 0 | Executive dashboard (enrolment, collections, outstanding fees, attendance, staff), academic/finance/HR reports, **approves expenses and payroll**, and can open every Admin, HR and Accounts page. |
+| Administrator / Registrar | 1 | Online applications → **admit students** (auto admission no. + portal login), student records, units/modules with learning outcomes, timetable (clash detection), terms & intakes, end-of-term promotion, results broadsheets, user accounts, announcements, website content (banners, news, gallery, campuses, team, testimonials, reviews, partners, TikTok). |
+| Trainer | 3 | My units, class lists, **attendance register**, CBET assessments (CATs, practicals, exams) with weighted marks and publishing, learning materials, auto-marked online exams, timetable. |
+| Student | 2 | Dashboard, units & learning outcomes, materials, timetable, attendance %, results & printable provisional transcript, fee statement & receipts, online exams. |
+| HR Officer | 4 | Employees (salary & statutory details), portal logins for staff, leave types and leave approvals, **monthly payroll** (PAYE, NSSF, SHIF, Housing Levy), payslips, job vacancies (shown on `/jobs`) and applications. |
+| Accountant | 5 | Receive payments (cash, M-Pesa, bank, cheque, card; duplicate reference check), printable receipts, single and class-wide invoicing from fee structures, balances/defaulters, statements, expenses, paying approved payroll, income & expenditure reports. |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+All staff also get **My HR**: apply for leave and download their payslips.
 
-## Learning Laravel
+### Key workflows
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Admission:** website application → Admin "Admit" → student record + login (username = admission number, temporary password shown once).
+- **Billing:** Accounts sets fee structure per course/term → "Bill a whole class" (safe to repeat; already-billed items are skipped) → payments → statement/receipts visible to the student.
+- **Payroll:** HR generates a draft for the month → Director approves → Accountant marks it paid → staff see payslips.
+- **Expenses:** Accountant records → Director approves/rejects → approved expenses count in reports.
+- **Grading:** final unit mark = weighted average of *published* assessments. Distinction ≥ 80, Credit ≥ 65, Pass ≥ 50 (Competent), otherwise Not Yet Competent.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Statutory payroll rates live in `app/Support/KenyaPayroll.php`. Review them whenever KRA, NSSF or SHA change rates.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Local setup
 
-## Laravel Sponsors
+```bash
+composer install
+cp .env.example .env && php artisan key:generate   # set DB_* for MySQL
+php artisan migrate:fresh --seed                   # schema + website content + demo data (local only)
+php artisan storage:link
+php artisan serve
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Demo logins (local only, password `password`): `director` (password `ChangeMe@2026`), `admin`, `hr`, `accounts`, `trainer`, `trainer2`–`trainer4`, and the student `HBIC/<year>/0001`. Users can sign in with either their username or their email address.
 
-### Premium Partners
+Run the tests (uses a MySQL database called `hbic_testing`):
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```bash
+php artisan test
+```
 
-## Contributing
+## Deploying to production
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# hewittandbennetweb
->>>>>>> 27291da5b8e87e132c5a3ef58f5b788c2fca4d1a
+1. Back up the production database.
+2. `composer install --no-dev --optimize-autoloader`
+3. **Existing live database:** the old portal tables (`students`, `units`, `unit_student`, `student_datas`, `paymentreceipts`, `fees_statements`, `online_exams`…) clash with the new schema. Rename or export them first and import any real student/receipt records into the new `students`/`payments` tables. Then run `php artisan migrate --force`. **New database:** `php artisan migrate --force && php artisan db:seed --class=SetupSeeder --force`. `SetupSeeder` creates the `director` login (set `DIRECTOR_PASSWORD` in `.env` first) plus leave types, expense categories, terms and intakes. Demo data is never seeded outside `local`/`testing`.
+4. `php artisan optimize:clear && php artisan optimize` (an old route cache hides the new portal routes).
+5. `php artisan storage:link`
+6. Sign in as `director`, change the password, then create the Admin, HR and Accountant accounts.

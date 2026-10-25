@@ -11,7 +11,7 @@
             <p style="color: #333;">The Program Fees is <strong>{{$student->course_fee }}</strong> and an addition attachment fee of 3,000 and  1000 School ID CARD FEE .</p>
             <p style="color: #333;">Your username (admission number) for registration is: <strong>{{ $student->student_no }}</strong></p>
             <p style="color: #333;">To complete your registration, click the button below: <strong>(use your admission number as username)</strong></p>
-            <a href="{{ route('register', ['username' => $student->student_no]) }}" style="display: inline-block; background-color: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Register Now</a>
+            <a href="{{ route('login') }}" style="display: inline-block; background-color: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Register Now</a>
             <p style="color: #333;">If you have any general queries, please feel free to contact us at <a href="mailto:info@hewittbennet.co.ke">info@hewittbennet.co.ke</a>.</p>
             <p style="color: #333;">For technical support, you can reach our ICT support team at <a href="mailto:info@hewittbennet.co.ke">ictsupport@hewittbennet.co.ke</a>.</p>
             <ul>

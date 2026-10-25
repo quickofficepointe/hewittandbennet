@@ -38,14 +38,14 @@
         <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-semibold text-center mb-6">Dean's Message</h2>
             <div class="text-lg text-gray-700 space-y-4">
-                <p class="italic text-blue-600"><i class="fas fa-quote-left"></i></p>
+                <p class="italic text-brand-600"><i class="fas fa-quote-left"></i></p>
                 <p class="text-justify">
                     Welcome to Hewitt and Bennet International College. Come and discuss your dream with us. At Hewitt and Bennet International College, we don’t wait for success to happen — we make it happen!
                 </p>
                 <p class="text-justify">
                     We are committed to making your dreams valid. It has worked for our alumni, and it can work for you too. Enroll today and let our friendly, supportive staff welcome you officially.
                 </p>
-                <p class="italic text-blue-600"><i class="fas fa-quote-right"></i></p>
+                <p class="italic text-brand-600"><i class="fas fa-quote-right"></i></p>
             </div>
         </div>
     </div>

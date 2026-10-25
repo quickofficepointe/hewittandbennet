@@ -31,7 +31,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach ($hosipitalityCourses as $course)
             <div class="max-w-xs rounded-lg overflow-hidden shadow-lg bg-white hover:shadow-2xl transition-all">
-                <img src="{{ asset($course->image) }}" class="w-full h-48 object-cover" alt="{{ $course->name }}">
+                <img src="{{ asset('storage/'.$course->image) }}" class="w-full h-48 object-cover" alt="{{ $course->name }}">
 
                 <div class="p-4">
                     <h5 class="text-xl font-semibold text-gray-800">{{ $course->name }}</h5>
@@ -40,7 +40,7 @@
                     <p class="text-gray-600 mt-2">We guarantee student Attachment/Internship to all our students, depending on their relevant areas of study.</p>
 
                     <div class="mt-4">
-                        <a href="#" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-all" data-bs-toggle="modal" data-bs-target="#registrationModal">
+                        <a href="{{ route('registration.create') }}" class="bg-brand-600 text-white py-2 px-4 rounded-lg hover:bg-brand-700 transition-all">
                             Apply Now <i class="fas fa-hand-pointer"></i>
                         </a>
                     </div>

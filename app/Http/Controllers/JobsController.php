@@ -2,92 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\hewitt_banners;
-use App\Models\courses;
-use App\Models\jobs;
+use App\Models\JobApplication;
+use App\Models\JobVacancy;
 use Illuminate\Http\Request;
 
+/** Public careers page: open vacancies (managed by HR) and the application form. */
 class JobsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $banners = hewitt_banners::where('status', true)->get();
-        $coursese = courses::all();
-        return view('frontendviews/careers/jobs/index',compact('banners', 'coursese'));
+        $vacancies = JobVacancy::with('department')->open()->latest()->get();
+
+        return view('frontendviews/careers/jobs/index', compact('vacancies'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-         // Validate the form data
-         $request->validate([
-            'name'       => 'required|string',
-            'institution' => 'required|string',
-            'department' => 'required|string',
-            'course'     => 'required|string',
-            'email'      => 'required|email',
-            'document'   => 'required|mimes:pdf|max:2048', // Validate that it's a PDF file (2MB max)
+        $data = $request->validate([
+            'job_vacancy_id' => 'nullable|exists:job_vacancies,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:30',
+            'position' => 'nullable|string|max:255',
+            'cover_letter' => 'nullable|string|max:5000',
+            'cv' => 'required|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
-        // Upload the combined document and store it in a storage directory
-        $documentPath = $request->file('document')->store('public/jobapplication_documents');
+        if (! empty($data['job_vacancy_id']) && ! JobVacancy::open()->whereKey($data['job_vacancy_id'])->exists()) {
+            return back()->withInput()->withErrors(['job_vacancy_id' => 'This vacancy is no longer accepting applications.']);
+        }
 
-        // Save the form data and document path to the database
-        jobs::create([
-            'name'          => $request->input('name'),
-            'institution'   => $request->input('institution'),
-            'department'    => $request->input('department'),
-            'course'        => $request->input('course'),
-            'email'         => $request->input('email'),
-            'document_path' => $documentPath,
-        ]);
+        // Stored on the private disk; HR downloads CVs through the portal.
+        $data['cv_path'] = $request->file('cv')->store('job-applications');
+        unset($data['cv']);
 
-        // Redirect the user or display a success message
-        return redirect()->route('register')->with('success', 'Application submitted successfully.');
-    }
+        JobApplication::create($data + ['status' => 'new']);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(jobs $jobs)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(jobs $jobs)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, jobs $jobs)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(jobs $jobs)
-    {
-        //
+        return redirect()->route('index.jobs')->with('success', 'Thank you! Your application has been received. Our HR team will contact shortlisted candidates.');
     }
 }

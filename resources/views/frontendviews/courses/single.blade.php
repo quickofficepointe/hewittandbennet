@@ -1,135 +1,109 @@
 @extends('layouts.welcomelayout')
 
-@section('meta-title', $course->name . ' - Hewitt Bennet International College')
-@section('meta-description', Str::limit($course->course_description, 160))
-@section('meta-keywords', $course->name . ', ' . ($course->department->name ?? 'Professional') . ', Courses, Education, Degrees, Certificates, Hewitt Bennet, College')
-@section('meta-author', 'Hewitt Bennet International College')
-@section('meta-url', url()->current())
-@section('meta-image', asset('storage/' . $course->image))
-@section('meta-date', $course->updated_at->toIso8601String())
+@php
+    use Illuminate\Support\Str;
+    $summary = Str::limit(strip_tags($course->course_description), 160);
+    $total = (float) $course->registration_fees + (float) $course->school_fees + (float) $course->school_uniform_fee;
+    $fees = array_filter([
+        'Registration Fee' => (float) $course->registration_fees,
+        'Tuition Fees' => (float) $course->school_fees,
+        'Uniform Fee' => (float) $course->school_uniform_fee,
+    ]);
+@endphp
 
-@section('og:type', 'website')
-@section('og:title', $course->name . ' - Hewitt Bennet International College')
-@section('og:description', Str::limit($course->course_description, 160))
-@section('og:image', asset('storage/' . $course->image))
-@section('og:url', url()->current())
-@section('og:site_name', 'Hewitt Bennet International College')
-@section('og:published_time', $course->updated_at->toIso8601String())
-
-@section('twitter:card', 'summary_large_image')
-@section('twitter:title', $course->name . ' - Hewitt Bennet International College')
-@section('twitter:description', Str::limit($course->course_description, 160))
-@section('twitter:image', asset('storage/' . $course->image))
-@section('twitter:site', '@HewittBennetIntl')
+@section('meta-title', $course->name.' | Hewitt & Bennet International College')
+@section('meta-description', $summary)
+@section('meta-keywords', $course->name.', '.($course->department->name ?? 'Professional').', TVET, Kenya, Hewitt Bennet')
+@section('og:type', 'article')
+@if ($course->image)
+    @section('og:image', asset('storage/'.$course->image))
+@endif
 
 @section('content')
-
-<!-- Course Detail Section --><section class="py-16 bg-gradient-to-br from-blue-50 to-indigo-100"> <div class="container mx-auto px-4"> <!-- Breadcrumb --> <div class="mb-6 text-sm text-gray-600"> <a href="{{ route('welcome') }}" class="hover:text-primary">Home</a> > <a href="{{ route('courses.all') }}" class="hover:text-primary">Courses</a> > <span class="text-primary font-medium">{{ $course->name }}</span> </div>
-text
-    <!-- Page Header -->
-    <div class="text-center mb-12">
-        <h5 class="text-lg font-semibold text-primary uppercase tracking-wider">{{ $course->department->name ?? 'Professional Program' }}</h5>
-        <h1 class="text-4xl md:text-5xl font-bold text-primary mt-2 mb-4">{{ $course->name }}</h1>
-        <p class="text-gray-600 max-w-2xl mx-auto">{{ $course->duration }}</p>
+<section class="bg-hbNavy text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <nav class="text-sm text-white/60 mb-4" aria-label="Breadcrumb">
+            <a href="{{ url('/') }}" class="hover:text-white">Home</a> <span class="mx-2">/</span>
+            <a href="{{ route('courses.all') }}" class="hover:text-white">Courses</a> <span class="mx-2">/</span>
+            <span class="text-white">{{ $course->name }}</span>
+        </nav>
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-hbGold">{{ $course->department->name ?? 'Professional Program' }}</p>
+        <h1 class="font-serif text-3xl md:text-4xl font-black mt-2">{{ $course->name }}</h1>
+        <div class="flex flex-wrap gap-3 mt-5 text-sm">
+            @if ($course->duration)<span class="bg-white/10 rounded-full px-4 py-1.5"><i class="fa-regular fa-clock mr-2 text-hbGold"></i>{{ $course->duration }}</span>@endif
+            @if ($course->level)<span class="bg-white/10 rounded-full px-4 py-1.5"><i class="fa-solid fa-layer-group mr-2 text-hbGold"></i>{{ $course->level }}</span>@endif
+            @if ($course->examining_body)<span class="bg-white/10 rounded-full px-4 py-1.5"><i class="fa-solid fa-award mr-2 text-hbGold"></i>{{ $course->examining_body }}</span>@endif
+        </div>
     </div>
+</section>
 
-    <div class="grid md:grid-cols-2 gap-10 items-start">
-        <!-- Course Image -->
-        <div class="relative">
-            <img src="{{ asset('storage/' . $course->image) }}"
-                 class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
-                 alt="{{ $course->name }}">
-            @if($course->is_featured)
-            <span class="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Featured Program</span>
-            @endif
+<section class="py-14 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-3 gap-10 items-start">
+        <div class="lg:col-span-2 space-y-8">
+            <img src="{{ $course->image ? asset('storage/'.$course->image) : asset('images/placeholder.webp') }}" alt="{{ $course->name }}"
+                 class="w-full max-h-[420px] object-cover rounded-xl shadow-md bg-white">
+            <div class="bg-white rounded-xl shadow-sm border p-6 sm:p-8">
+                <h2 class="text-xl font-black text-hbNavy uppercase mb-4">About this Course</h2>
+                <div class="text-gray-700 leading-relaxed space-y-4">{!! nl2br(e($course->course_description)) !!}</div>
+            </div>
         </div>
 
-        <!-- Course Details -->
-        <div class="space-y-6">
-            <div>
-                <h2 class="text-2xl font-semibold text-primary mb-4">Course Description</h2>
-                <p class="text-gray-700 leading-relaxed">{{ $course->course_description }}</p>
-            </div>
-
-            <!-- Fees Structure -->
-            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                <h3 class="text-xl font-bold text-primary mb-4">Fees Structure</h3>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <span class="text-gray-700 font-medium">Registration Fees:</span>
-                        <span class="text-primary font-semibold">KES {{ number_format($course->registration_fees) }}</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <span class="text-gray-700 font-medium">School Fees:</span>
-                        <span class="text-primary font-semibold">KES {{ number_format($course->school_fees) }}</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <span class="text-gray-700 font-medium">Uniform Fee:</span>
-                        <span class="text-primary font-semibold">KES {{ number_format($course->school_uniform_fee) }}</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-2">
-                        <span class="text-gray-900 font-bold">Total Estimated Cost:</span>
-                        <span class="text-primary font-bold text-lg">KES {{ number_format($course->registration_fees + $course->school_fees + $course->school_uniform_fee) }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Call to Action -->
-            <div class="text-center md:text-left">
-                <a href="#enroll"
-                   class="inline-block bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-colors duration-300 shadow-md hover:shadow-lg">
-                   <i class="fas fa-user-graduate mr-2"></i>Apply Now
+        <aside class="lg:sticky lg:top-28 space-y-6">
+            <div class="bg-white rounded-xl shadow-lg border-t-4 border-hbRed p-6">
+                <h2 class="text-lg font-black text-hbNavy uppercase mb-4">Fees</h2>
+                @if ($fees)
+                    <dl class="space-y-3 text-sm">
+                        @foreach ($fees as $label => $amount)
+                            <div class="flex justify-between border-b pb-2"><dt class="text-gray-600">{{ $label }}</dt><dd class="font-semibold text-hbNavy">KES {{ number_format($amount) }}</dd></div>
+                        @endforeach
+                        <div class="flex justify-between pt-1"><dt class="font-bold">Total</dt><dd class="font-black text-hbNavy text-lg">KES {{ number_format($total) }}</dd></div>
+                    </dl>
+                @else
+                    <p class="text-sm text-gray-600">Contact our admissions team for the current fees for this course.</p>
+                @endif
+                <button type="button" onclick="openEnrollModal({{ $course->id }})" class="mt-6 w-full bg-hbRed text-white py-3 rounded-md font-black uppercase text-sm hover:bg-red-700 transition">
+                    <i class="fa-solid fa-user-graduate mr-2"></i>Apply for this Course
+                </button>
+                <a href="https://wa.me/{{ config('college.whatsapp') }}?text={{ rawurlencode('Hello, I would like to know more about '.$course->name.'.') }}" target="_blank" rel="noopener"
+                   class="mt-3 w-full inline-flex justify-center items-center gap-2 border-2 border-[#25D366] text-[#128C7E] py-2.5 rounded-md font-bold text-sm hover:bg-[#25D366] hover:text-white transition">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Ask on WhatsApp
                 </a>
-                <p class="text-sm text-gray-600 mt-2">Limited seats available. Apply today to secure your spot!</p>
+                <p class="text-xs text-gray-500 mt-4">Fees are subject to change. Monthly intakes – limited seats per class.</p>
             </div>
-        </div>
+        </aside>
     </div>
+</section>
 
-    <!-- Additional Information Section -->
-    @if($course->short_description || $course->requirements)
-    <div class="mt-16 bg-white rounded-xl shadow-md p-8">
-        <h2 class="text-2xl font-bold text-primary mb-6">Program Details</h2>
-        <div class="grid md:grid-cols-2 gap-8">
-            @if($course->short_description)
-            <div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Key Features</h3>
-                <p class="text-gray-600">{{ $course->short_description }}</p>
-            </div>
-            @endif
-
-            @if($course->requirements)
-            <div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Admission Requirements</h3>
-                <p class="text-gray-600">{{ $course->requirements }}</p>
-            </div>
-            @endif
-        </div>
-    </div>
-    @endif
-
-    <!-- Related Courses -->
-    @if($relatedCourses->count() > 0)
-    <div class="mt-16">
-        <h2 class="text-2xl font-bold text-primary mb-8 text-center">Related Courses</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($relatedCourses as $relatedCourse)
-            <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-                <img src="{{ asset('storage/' . $relatedCourse->image) }}"
-                     alt="{{ $relatedCourse->name }}"
-                     class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg text-primary mb-2">{{ $relatedCourse->name }}</h3>
-                    <p class="text-gray-600 text-sm mb-3">{{ Str::limit($relatedCourse->short_description, 80) }}</p>
-                    <a href="{{ route('course.single', $relatedCourse->slug) }}"
-                       class="text-primary font-medium hover:text-blue-800 text-sm">
-                        View Details →
+@if ($relatedCourses->isNotEmpty())
+    <section class="py-14 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 class="text-2xl font-black text-hbNavy uppercase mb-8">Related Courses</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach ($relatedCourses as $related)
+                    <a href="{{ route('course.single', $related->slug) }}" class="group bg-white border rounded-xl overflow-hidden hover:shadow-lg transition">
+                        <img src="{{ $related->image ? asset('storage/'.$related->image) : asset('images/placeholder.webp') }}" alt="" class="w-full h-44 object-cover" loading="lazy">
+                        <div class="p-5">
+                            <h3 class="font-bold text-hbNavy group-hover:text-hbRed transition">{{ $related->name }}</h3>
+                            <p class="text-xs text-gray-500 mt-1">{{ $related->duration }}</p>
+                            <span class="text-sm font-bold text-hbRed mt-3 inline-block">View details →</span>
+                        </div>
                     </a>
-                </div>
+                @endforeach
             </div>
-            @endforeach
+        </div>
+    </section>
+@endif
+
+<section class="py-14 bg-hbNavy text-white text-center">
+    <div class="max-w-3xl mx-auto px-4">
+        <h2 class="text-2xl md:text-3xl font-black">Ready to Start Your Journey?</h2>
+        <p class="text-white/80 mt-3">Join the graduates building careers in Kenya and abroad with Hewitt &amp; Bennet.</p>
+        <div class="flex flex-wrap justify-center gap-3 mt-8">
+            <a href="{{ route('application.form') }}" class="bg-hbRed text-white px-8 py-3 rounded-md font-black uppercase text-sm hover:bg-red-700 transition">Full Application Form</a>
+            <a href="{{ route('courses.all') }}" class="bg-white text-hbNavy px-8 py-3 rounded-md font-black uppercase text-sm hover:bg-gray-100 transition">Browse All Courses</a>
         </div>
     </div>
-    @endif
-</div>
-</section><!-- Enrollment Section --><section id="enroll" class="py-16 bg-primary text-white"> <div class="container mx-auto px-4 text-center"> <h2 class="text-3xl font-bold mb-4">Ready to Start Your Journey?</h2> <p class="text-blue-100 mb-8 max-w-2xl mx-auto">Join hundreds of successful students who have transformed their careers with our programs.</p> <a href="{{ route('application.form') }}" class="bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-300 inline-block"> Apply for Admission </a> </div> </section><style> .breadcrumb a:hover { color: #1E3A8A; text-decoration: underline; } </style>
+</section>
+
+@include('frontendviews.partials.enroll-modal')
 @endsection

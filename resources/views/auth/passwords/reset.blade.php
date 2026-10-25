@@ -23,7 +23,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-r from-blue-500 to-purple-600 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-r from-brand-500 to-purple-600 min-h-screen flex items-center justify-center p-4">
     <!-- Simulating the @extends('layouts.welcomelayout') -->
     <div class="fixed top-0 left-0 w-full bg-white shadow-md py-3 px-6 flex items-center justify-between">
         <div class="flex items-center">
@@ -31,7 +31,7 @@
             <span class="ml-2 font-semibold text-gray-800">Hewitt Bennet International College</span>
         </div>
         <div>
-            <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm">Login</a>
+            <a href="#" class="text-brand-600 hover:text-brand-800 text-sm">Login</a>
         </div>
     </div>
 
@@ -46,7 +46,7 @@
             <!-- Email Field -->
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                <input id="email" type="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="email" value="user@example.com" required autocomplete="email" autofocus>
+                <input id="email" type="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm" name="email" value="user@example.com" required autocomplete="email" autofocus>
                 <p class="mt-2 text-sm text-red-500 hidden email-error">Please enter a valid email address</p>
             </div>
 
@@ -54,7 +54,7 @@
             <div class="mb-4">
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <div class="relative">
-                    <input id="password" type="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="password" required autocomplete="new-password">
+                    <input id="password" type="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm" name="password" required autocomplete="new-password">
                     <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
                         <i class="far fa-eye"></i>
                     </button>
@@ -67,14 +67,14 @@
             <!-- Confirm Password Field -->
             <div class="mb-6">
                 <label for="password-confirm" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-                <input id="password-confirm" type="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" name="password_confirmation" required autocomplete="new-password">
+                <input id="password-confirm" type="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm" name="password_confirmation" required autocomplete="new-password">
                 <p id="passwordMatch" class="password-match text-red-600"><i class="fas fa-times-circle mr-1"></i> Passwords do not match</p>
                 <p id="passwordMatchSuccess" class="password-match text-green-600"><i class="fas fa-check-circle mr-1"></i> Passwords match</p>
             </div>
 
             <!-- Submit Button -->
             <div class="mb-4">
-                <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                <button type="submit" class="w-full py-2 px-4 bg-brand-600 text-white font-semibold rounded-md shadow-md hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50">
                     Reset Password
                 </button>
             </div>

@@ -30,12 +30,12 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         @foreach ($shortCourses as $course)
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ asset($course->image) }}" class="w-full h-56 object-cover" alt="{{ $course->name }}">
+                <img src="{{ asset('storage/'.$course->image) }}" class="w-full h-56 object-cover" alt="{{ $course->name }}">
                 <div class="p-6">
                     <h5 class="text-xl font-semibold mb-2">{{ $course->name }}</h5>
                     <p class="text-gray-700 mb-4">Duration: <strong>{{ $course->duration }}</strong></p>
                     <p class="text-gray-600 mb-4">We guarantee student Attachment/Internship to all our students, depending on their relevant areas of study.</p>
-                    <a href="#" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg text-lg hover:bg-blue-700 transition duration-300" data-bs-toggle="modal" data-bs-target="#registrationModal">
+                    <a href="{{ route('registration.create') }}" class="inline-block px-6 py-3 bg-brand-600 text-white rounded-lg text-lg hover:bg-brand-700 transition duration-300">
                         Apply Now <i class="fas fa-hand-pointer ml-2"></i>
                     </a>
                 </div>
