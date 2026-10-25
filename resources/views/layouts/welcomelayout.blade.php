@@ -2,7 +2,12 @@
     $college = config('college');
     $pageTitle = trim($__env->yieldContent('meta-title')) ?: (trim($__env->yieldContent('title')) ?: 'Hewitt & Bennet International College | Accredited TVET Programs in Kenya');
     $pageDescription = trim($__env->yieldContent('meta-description')) ?: 'Hewitt & Bennet International College – accredited TVET institution offering healthcare, caregiving, hospitality, medical imaging and international work-abroad programs. TVETA, NITA, CDACC approved.';
-    $pageImage = trim($__env->yieldContent('og:image')) ?: (trim($__env->yieldContent('meta-image')) ?: asset('images/og-image.jpg'));
+    $pageImage = trim($__env->yieldContent('og:image')) ?: trim($__env->yieldContent('meta-image'));
+    // Several pages name share images that were never uploaded; fall back to the default card.
+    $localImage = $pageImage ? public_path(ltrim((string) parse_url($pageImage, PHP_URL_PATH), '/')) : null;
+    if (! $pageImage || (str_starts_with($pageImage, url('/')) && ! is_file($localImage))) {
+        $pageImage = asset('images/og-image.jpg');
+    }
     $navLinks = [
         ['Home', url('/'), request()->is('/')],
         ['About', url('/#about'), false],
