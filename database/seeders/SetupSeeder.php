@@ -14,14 +14,7 @@ class SetupSeeder extends Seeder
 {
     public function run(): void
     {
-        User::firstOrCreate(['username' => 'director'], [
-            'name' => 'College Director',
-            'email' => 'director@hewittbennet.co.ke',
-            'role' => User::DIRECTOR,
-            'password' => env('DIRECTOR_PASSWORD', 'ChangeMe@2026'),
-            'is_active' => true,
-            'email_verified_at' => now(),
-        ]);
+        $this->createFirstDirector();
 
         // Kenyan Employment Act 2007 minimums.
         foreach ([
@@ -58,5 +51,31 @@ class SetupSeeder extends Seeder
                 Intake::create(['name' => "{$month} {$year}", 'start_date' => date('Y-m-d', strtotime("first monday of {$month} {$year}")), 'is_open' => true]);
             }
         }
+    }
+
+    /** Creates the "director" login unless a director account already exists (e.g. on the live site). */
+    private function createFirstDirector(): void
+    {
+        $email = 'director@hewittbennet.co.ke';
+        if (User::where('role', User::DIRECTOR)->orWhere('username', 'director')->orWhere('email', $email)->exists()) {
+            return;
+        }
+
+        $password = env('DIRECTOR_PASSWORD');
+        if (! $password && app()->isProduction()) {
+            $this->command?->warn('No director account created: set DIRECTOR_PASSWORD in .env and run this seeder again.');
+
+            return;
+        }
+
+        User::create([
+            'name' => 'College Director',
+            'username' => 'director',
+            'email' => $email,
+            'role' => User::DIRECTOR,
+            'password' => $password ?: 'ChangeMe@2026',
+            'is_active' => true,
+            'email_verified_at' => now(),
+        ]);
     }
 }
